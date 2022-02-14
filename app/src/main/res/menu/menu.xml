@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/log_out_item"
+        android:title="Log out from Firebase"
+        app:showAsAction="never"
+        />
+    <item
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/settings"
+        android:title="Settings"
+        app:showAsAction="never"
+        />
+</menu>

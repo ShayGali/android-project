@@ -1,0 +1,24 @@
+//        // how to save data do the database
+//
+//        // get the user that login
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//
+//
+//        // get reference to the database
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        // get the path to where i wants to save the data
+//        DatabaseReference myRef = database.getReference("users").child(currentUser.getUid());
+//
+//        // the object that i wants to save
+//        Map<String,String> categories = new HashMap<>();
+//        Map<String,String> friends= new HashMap<>();
+//        Map<String,String> rooms= new HashMap<>();
+//        User user = new User("test","Israel", categories,friends,rooms);
+//
+//        // save the data
+//        myRef.setValue(user);
+
+
+//        //SAVE MESSAGE
+//        DatabaseReference myRef2 = database.getReference("message_rooms").child(UUID.randomUUID().toString());
+//        myRef2.setValue(new Message("hello","12","1", new Date()));
