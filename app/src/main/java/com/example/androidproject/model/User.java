@@ -1,22 +1,26 @@
 package com.example.androidproject.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class User {
     String userName;
     String country;
-    Map<String,String> categories;
-    Map<String,String> friends;
-    Map<String,String> rooms;
 
 
-    public User(String userName, String country, Map<String, String> categories, Map<String, String> friends, Map<String, String> rooms) {
+    ArrayList<String> categories;
+    ArrayList<String> friends;
+    ArrayList<String> rooms;
+
+    public User(String userName, String country, ArrayList<String> categories, ArrayList<String> friends, ArrayList<String> rooms) {
         this.userName = userName;
         this.country = country;
         this.categories = categories;
         this.friends = friends;
         this.rooms = rooms;
     }
+
 
     public User() {
 
@@ -38,27 +42,27 @@ public class User {
         this.country = country;
     }
 
-    public Map<String, String> getCategories() {
+    public ArrayList<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(Map<String, String> categories) {
+    public void setCategories(ArrayList<String> categories) {
         this.categories = categories;
     }
 
-    public Map<String, String> getFriends() {
+    public ArrayList<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(Map<String, String> friends) {
+    public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }
 
-    public Map<String, String> getRooms() {
+    public ArrayList<String> getRooms() {
         return rooms;
     }
 
-    public void setRooms(Map<String, String> rooms) {
+    public void setRooms(ArrayList<String> rooms) {
         this.rooms = rooms;
     }
 }
