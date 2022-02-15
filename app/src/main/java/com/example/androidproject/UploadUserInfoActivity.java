@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.example.androidproject.model.User;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 public class UploadUserInfoActivity extends AppCompatActivity {
 
-    ListView listViewData;
+    GridView listViewData;
     ArrayAdapter<String> adapter;
     String[] categories = {"FPS", "RPG", "MMO", "Fantasy", "Action", "Puzzle", "Adventure", "Sports", "Online", "CO-OP", "XBox", "PC", "PlayStation"};
 

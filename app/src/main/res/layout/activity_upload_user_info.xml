@@ -31,11 +31,13 @@
         android:hint="country"
         />
 
-    <ListView
+    <GridView
         android:id="@+id/listView_preferences_categories_on_user_info"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:choiceMode="multipleChoice" />
+        android:choiceMode="multipleChoice"
+        android:numColumns="2"
+        />
 
     <Button
         android:id="@+id/button2"
