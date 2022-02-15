@@ -8,10 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.androidproject.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +23,7 @@ import java.util.ArrayList;
 
 public class UploadUserInfoActivity extends AppCompatActivity {
 
-    GridView listViewData;
+    ListView listViewData;
     ArrayAdapter<String> adapter;
     String[] categories = {"FPS", "RPG", "MMO", "Fantasy", "Action", "Puzzle", "Adventure", "Sports", "Online", "CO-OP", "XBox", "PC", "PlayStation"};
 
@@ -37,6 +34,7 @@ public class UploadUserInfoActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     User userModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +53,13 @@ public class UploadUserInfoActivity extends AppCompatActivity {
         myRef = database.getReference("users").child(currentUser.getUid());
         // כדי לאתחל את ה user על ההתחלה- אם לא הוא יהיה ב null בלחיצה הראשונה
         getUserData();
+
     }
 
-
+    /**
+     *
+     * @param view
+     */
     @SuppressLint("SetTextI18n")
     public void submitData(View view) {
         // לקבל את הנתונים של היוזר מהדאטה בייס
@@ -75,28 +77,29 @@ public class UploadUserInfoActivity extends AppCompatActivity {
         String userName = userNameInput.getText().toString();
 
 
-            // בדיקה אם באמת הכניסו לי את השדות
-            if (country.trim().length() > 0) userModel.setCountry(country);
-            if (userName.trim().length() > 0) userModel.setUserName(userName);
+        // בדיקה אם באמת הכניסו לי את השדות
+        if (country.trim().length() > 0) userModel.setCountry(country);
+        if (userName.trim().length() > 0) userModel.setUserName(userName);
 
-            userModel.setCategories(selectedCategories);
+        userModel.setCategories(selectedCategories);
 
-            myRef.setValue(userModel);
-        }
+        myRef.setValue(userModel);
+    }
 
 
-
-    // TODO: להפוך את זה לאסינכרוני
+    /**
+     *
+     */
     public void getUserData() {
-
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                if(dataSnapshot.exists())
+                if (dataSnapshot.exists()) {
                     userModel = dataSnapshot.getValue(User.class);
-                else
+                    displayUserInfoToTheInputFields();
+                } else
                     userModel = new User();
             }
 
@@ -106,5 +109,22 @@ public class UploadUserInfoActivity extends AppCompatActivity {
                 userModel = new User();
             }
         });
+    }
+
+
+    /**
+     * this method display the user data to the input field if there is any data save on the data
+     */
+    void displayUserInfoToTheInputFields() {
+        if (userModel.getCategories() != null) {
+            for (int i = 0; i < listViewData.getCount(); i++) {
+                if (userModel.getCategories().contains(listViewData.getItemAtPosition(i).toString()))
+                    listViewData.setItemChecked(i, true);
+            }
+        }
+        if (userModel.getUserName() != null)
+            userNameInput.setText(userModel.getUserName());
+        if (userModel.getCountry() != null)
+            countryInput.setText(userModel.getCountry());
     }
 }
