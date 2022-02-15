@@ -23,8 +23,10 @@ import java.util.ArrayList;
 
 public class UploadUserInfoActivity extends AppCompatActivity {
 
-    ListView listViewData;
-    ArrayAdapter<String> adapter;
+
+    ListView listViewData; // the list of the the categories checkboxes
+    ArrayAdapter<String> adapter; // the adapter of the data
+    // the categories
     String[] categories = {"FPS", "RPG", "MMO", "Fantasy", "Action", "Puzzle", "Adventure", "Sports", "Online", "CO-OP", "XBox", "PC", "PlayStation"};
 
     EditText countryInput;
@@ -32,8 +34,8 @@ public class UploadUserInfoActivity extends AppCompatActivity {
 
     FirebaseUser currentUser;
     FirebaseDatabase database;
-    DatabaseReference myRef;
-    User userModel;
+    DatabaseReference myRef; // reference to the path that the user data is save on the database
+    User userModel; // the user model
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,9 @@ public class UploadUserInfoActivity extends AppCompatActivity {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users").child(currentUser.getUid());
+
         // כדי לאתחל את ה user על ההתחלה- אם לא הוא יהיה ב null בלחיצה הראשונה
+        // displayUserInfoToTheInputFields והוא גם ייקרא ל
         getUserData();
 
     }
