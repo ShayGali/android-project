@@ -1,8 +1,6 @@
 package com.example.androidproject.model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class User {
     String userName;
@@ -65,4 +63,6 @@ public class User {
     public void setRooms(ArrayList<String> rooms) {
         this.rooms = rooms;
     }
+
+
 }
