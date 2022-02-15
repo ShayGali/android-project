@@ -12,4 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="chat" />
+
+    <TextView
+        android:id="@+id/roomId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 </LinearLayout>
