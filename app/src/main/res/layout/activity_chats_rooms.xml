@@ -12,4 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="rooms" />
+
+    <Button
+        android:id="@+id/goToChatBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goToChat"
+        android:text="go to chat" />
 </LinearLayout>
