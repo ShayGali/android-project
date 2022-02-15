@@ -1,5 +1,6 @@
 package com.example.androidproject;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,11 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 
-import com.example.androidproject.model.Message;
-import com.example.androidproject.model.User;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,46 +23,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int SIGN_FROM_CREATE = 1;
-    public static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public  FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public FirebaseUser currentUser;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser == null) {
             Intent singToFirebase = AuthUI.getInstance().createSignInIntentBuilder().build();
             startActivityForResult(singToFirebase, SIGN_FROM_CREATE);
         } else {
             //TODO: לשים בפונקציה
-            DatabaseReference myRef = database.getReference("users").child(currentUser.getUid());
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    if(!dataSnapshot.exists()){ // אם אין עליו מידע בדאטה בייס
-                        Intent intent = new Intent(MainActivity.this, UploadUserInfoActivity.class);
-                        intent.putExtra("user", currentUser);
-                        startActivity(intent);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                }
-            });
+            checkIfTheUserInfoSaveInTheDataBase();
             popupDetails(true);
         }
     }
@@ -102,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private void popupDetails(boolean success) {
         if (success) {
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             String userDetails = "Your display name is: " + currentUser.getDisplayName() +
                     ", your id: " + currentUser.getUid();
 
@@ -124,37 +107,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // האם הנתונים שלו שמורים בדאטהבייס
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            // מופע לדאטהבייס
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("users").child(currentUser.getUid());
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    if(!dataSnapshot.exists()){ // אם אין עליו מידע בדאטה בייס
-                        Intent intent = new Intent(MainActivity.this, UploadUserInfoActivity.class);
-                        intent.putExtra("user", currentUser);
-                        startActivity(intent);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                }
-            });
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            checkIfTheUserInfoSaveInTheDataBase();
         } else {
             popupDetails(false);
             finish();// סוגר את המסך הנוכחי - מוציא אותו מהאפליקציה
         }
     }
 
-
-    private void startMessing() {
-    }
 
 
     /**
@@ -172,12 +132,48 @@ public class MainActivity extends AppCompatActivity {
     private void logout() {
 
         // TODO: צריך להתבצע בצורה אסינכרונית
+        // TODO: כשהוא מתנתק להעביר אותו לדף חיבור
         AuthUI.getInstance().signOut(this).addOnCompleteListener(task -> {
             Toast.makeText(this, "You have logged-out", Toast.LENGTH_LONG).show();
-//            finish();
+            finish();
         });
     }
 
 
+    public void navToChatsRoom(View view) {
+        Intent intent = new Intent(this, ChatsRoomsActivity.class);
+        startActivity(intent);
+    }
+
+    public void navToSearch(View view) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
+    }
+
+    public void navToSettings(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void checkIfTheUserInfoSaveInTheDataBase(){
+        DatabaseReference myRef = database.getReference("users").child(currentUser.getUid());
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                if(!dataSnapshot.exists()){ // אם אין עליו מידע בדאטה בייס
+                    Intent intent = new Intent(MainActivity.this, UploadUserInfoActivity.class);
+                    intent.putExtra("user", currentUser);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+    }
 }
 

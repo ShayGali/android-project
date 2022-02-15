@@ -10,15 +10,25 @@
 //        DatabaseReference myRef = database.getReference("users").child(currentUser.getUid());
 //
 //        // the object that i wants to save
-//        Map<String,String> categories = new HashMap<>();
-//        Map<String,String> friends= new HashMap<>();
-//        Map<String,String> rooms= new HashMap<>();
+//        ArrayList<String> categories = new ArrayList<>();
+//        ArrayList<String> friends= new ArrayList<>();
+//        ArrayList<String> rooms= new ArrayList<>();
+//        categories.add("hello");
+//        categories.add("qwert");
+//        categories.add("sadeq");
 //        User user = new User("test","Israel", categories,friends,rooms);
 //
 //        // save the data
 //        myRef.setValue(user);
 
 
-//        //SAVE MESSAGE
-//        DatabaseReference myRef2 = database.getReference("message_rooms").child(UUID.randomUUID().toString());
-//        myRef2.setValue(new Message("hello","12","1", new Date()));
+
+//        SAVE MESSAGE
+        String roomUUID = UUID.randomUUID().toString(); // המזהה של החדר
+        // יצירת נתיב הודעה חדשה באותו חדר
+        DatabaseReference myRef2 = database.getReference("message_rooms").child(roomUUID).child(UUID.randomUUID().toString());
+        // ההודעה עצמה שתכנס לנתיב
+        myRef2.setValue(new Message("hello","EO3EuWeLKcOU8lt0Y6UVFDLG0d02","uAmEMySowGWSCY18X9BHRZoG8ek2", new Date()));
+        // יצירת נתיב חדש - הודעה חדשה
+        myRef2 = database.getReference("message_rooms").child(roomUUID).child(UUID.randomUUID().toString());
+        myRef2.setValue(new Message("2","uAmEMySowGWSCY18X9BHRZoG8ek2","EO3EuWeLKcOU8lt0Y6UVFDLG0d02", new Date()));

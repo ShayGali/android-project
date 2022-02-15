@@ -8,11 +8,40 @@
     tools:context=".UploadUserInfoActivity">
 
     <TextView
-        android:id="@+id/idk"
+        android:id="@+id/textView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView"
-        android:textSize="34sp" />
+        android:text="user info" />
+
+    <EditText
+        android:id="@+id/username_input_user_info_act"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="userName"
+        />
+
+    <EditText
+        android:id="@+id/country_input_user_info_act"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="country"
+        />
+
+    <ListView
+        android:id="@+id/listView_preferences_categories_on_user_info"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:choiceMode="multipleChoice" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="submitData"
+        android:text="Button" />
 
 </LinearLayout>
