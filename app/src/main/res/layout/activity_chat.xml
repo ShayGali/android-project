@@ -7,15 +7,16 @@
     android:orientation="vertical"
     tools:context=".activities.ChatActivity">
 
-    <TextView
-        android:id="@+id/textView3"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="chat" />
+        android:layout_height="400dp"
+        android:divider="@android:color/black"
+        android:dividerHeight="10.0sp"/>
 
-    <TextView
-        android:id="@+id/roomId"
+    <Button
+        android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="Button" />
 </LinearLayout>

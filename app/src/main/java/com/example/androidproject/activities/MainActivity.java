@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -173,6 +175,11 @@ public class MainActivity extends AppCompatActivity {
                 // Failed to read value
             }
         });
+    }
+
+
+    public static void showToastFromThread(final Activity activity, final String displayMsg) {
+        activity.runOnUiThread(() -> Toast.makeText(activity, displayMsg, Toast.LENGTH_SHORT).show());
     }
 }
 

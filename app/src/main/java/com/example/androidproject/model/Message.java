@@ -7,18 +7,19 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Message {
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    String ID;
     String messageContent;
-    String receiverId;
     String senderId;
     String timestamp;
 
-    public Message(String messageContent, String receiverId, String senderId, Date timestamp) {
+    public Message(String ID,String messageContent, String senderId, Date timestamp) {
+        this.ID = ID;
         this.messageContent = messageContent;
-        this.receiverId = receiverId;
         this.senderId = senderId;
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        this.timestamp =  dateFormat.format(timestamp);;
+        this.timestamp =  dateFormat.format(timestamp);
     }
 
     public Message() {
@@ -32,13 +33,7 @@ public class Message {
         this.messageContent = messageContent;
     }
 
-    public String getReceiverId() {
-        return receiverId;
-    }
 
-    public void setReceiverId(String receiverId) {
-        this.receiverId = receiverId;
-    }
 
     public String getSenderId() {
         return senderId;
@@ -54,5 +49,9 @@ public class Message {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getID() {
+        return ID;
     }
 }

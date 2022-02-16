@@ -96,7 +96,7 @@ public class UploadUserInfoActivity extends AppCompatActivity {
             userModel.setCategories(selectedCategories);
 
             myRef.setValue(userModel);
-            showToast("The data was successfully saved in the database");
+            MainActivity.showToastFromThread(this,"The data was successfully saved in the database");
         });
         thread.start();
 
@@ -150,11 +150,5 @@ public class UploadUserInfoActivity extends AppCompatActivity {
             countryInput.setText(userModel.getCountry());
     }
 
-    /**
-     * help me make a Toast from thread
-     * @param displayMsg the message that will be display
-     */
-    public void showToast(final String displayMsg) {
-        runOnUiThread(() -> Toast.makeText(this, displayMsg, Toast.LENGTH_SHORT).show());
-    }
+
 }
