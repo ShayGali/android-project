@@ -1,8 +1,10 @@
-package com.example.androidproject;
+package com.example.androidproject.utilities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
+
+import com.example.androidproject.R;
 
 public class LoadingAlert {
 

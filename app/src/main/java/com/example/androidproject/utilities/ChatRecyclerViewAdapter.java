@@ -1,4 +1,4 @@
-package com.example.androidproject;
+package com.example.androidproject.utilities;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.androidproject.R;
 import com.example.androidproject.model.Message;
 
 import java.util.ArrayList;
@@ -25,10 +26,8 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_layout, parent, false);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_received_layout, parent, false);
         MessageViewHolder messageViewHolder = new MessageViewHolder(view);
-
         return messageViewHolder;
     }
 

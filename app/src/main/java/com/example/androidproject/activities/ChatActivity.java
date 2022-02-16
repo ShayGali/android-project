@@ -11,8 +11,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.androidproject.ChatRecyclerViewAdapter;
-import com.example.androidproject.LoadingAlert;
+import com.example.androidproject.utilities.ChatRecyclerViewAdapter;
+import com.example.androidproject.utilities.LoadingAlert;
 import com.example.androidproject.R;
 import com.example.androidproject.model.Message;
 import com.google.firebase.auth.FirebaseAuth;
