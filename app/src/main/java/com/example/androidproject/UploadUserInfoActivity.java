@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.androidproject.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 
 public class UploadUserInfoActivity extends AppCompatActivity {
 
+    LoadingAlert loadingAlert = new LoadingAlert(this);
 
     ListView listViewData; // the list of the the categories checkboxes
     ArrayAdapter<String> adapter; // the adapter of the data
@@ -56,38 +58,45 @@ public class UploadUserInfoActivity extends AppCompatActivity {
 
         // כדי לאתחל את ה user על ההתחלה- אם לא הוא יהיה ב null בלחיצה הראשונה
         // displayUserInfoToTheInputFields והוא גם ייקרא ל
-        getUserData();
+
+        //start loading alert
+        // will dismiss when the thread end
+        loadingAlert.startLoadingDialog();
+        Thread thread = new Thread(this::getUserData);
+        thread.start();
 
     }
 
     /**
-     *
      * @param view
      */
-    @SuppressLint("SetTextI18n")
     public void submitData(View view) {
         // לקבל את הנתונים של היוזר מהדאטה בייס
-        getUserData();
-
-        // לקבל את כל מה שהוא בחר מהרשימה
-        ArrayList<String> selectedCategories = new ArrayList<>();
-        for (int i = 0; i < listViewData.getCount(); i++) {
-            if (listViewData.isItemChecked(i)) {
-                selectedCategories.add(listViewData.getItemAtPosition(i).toString());
+        Thread thread = new Thread(() -> {
+            getUserData();
+            // לקבל את כל מה שהוא בחר מהרשימה
+            ArrayList<String> selectedCategories = new ArrayList<>();
+            for (int i = 0; i < listViewData.getCount(); i++) {
+                if (listViewData.isItemChecked(i)) {
+                    selectedCategories.add(listViewData.getItemAtPosition(i).toString());
+                }
             }
-        }
 
-        String country = countryInput.getText().toString();
-        String userName = userNameInput.getText().toString();
+            String country = countryInput.getText().toString();
+            String userName = userNameInput.getText().toString();
 
 
-        // בדיקה אם באמת הכניסו לי את השדות
-        if (country.trim().length() > 0) userModel.setCountry(country);
-        if (userName.trim().length() > 0) userModel.setUserName(userName);
+            // בדיקה אם באמת הכניסו לי את השדות
+            if (country.trim().length() > 0) userModel.setCountry(country);
+            if (userName.trim().length() > 0) userModel.setUserName(userName);
 
-        userModel.setCategories(selectedCategories);
+            userModel.setCategories(selectedCategories);
 
-        myRef.setValue(userModel);
+            myRef.setValue(userModel);
+            showToast("The data was successfully saved in the database");
+        });
+        thread.start();
+
     }
 
 
@@ -105,6 +114,9 @@ public class UploadUserInfoActivity extends AppCompatActivity {
                     displayUserInfoToTheInputFields();
                 } else
                     userModel = new User();
+
+                // dismiss the loading alert
+                loadingAlert.dismissDialog();
             }
 
             @Override
@@ -130,5 +142,13 @@ public class UploadUserInfoActivity extends AppCompatActivity {
             userNameInput.setText(userModel.getUserName());
         if (userModel.getCountry() != null)
             countryInput.setText(userModel.getCountry());
+    }
+
+    /**
+     * help me make a Toast from thread
+     * @param displayMsg the message that will be display
+     */
+    public void showToast(final String displayMsg) {
+        runOnUiThread(() -> Toast.makeText(this, displayMsg, Toast.LENGTH_SHORT).show());
     }
 }
