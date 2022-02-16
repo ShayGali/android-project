@@ -10,22 +10,22 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.AndroidProject">
         <activity
-            android:name=".UploadUserInfoActivity"
+            android:name=".activities.UploadUserInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".ChatsRoomsActivity"
+            android:name=".activities.ChatsRoomsActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".ChatActivity"
+            android:name=".activities.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".activities.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,10 +1,12 @@
-package com.example.androidproject;
+package com.example.androidproject.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.androidproject.R;
 
 public class ChatsRoomsActivity extends AppCompatActivity {
 
