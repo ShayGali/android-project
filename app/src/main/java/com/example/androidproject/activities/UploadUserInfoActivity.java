@@ -70,7 +70,8 @@ public class UploadUserInfoActivity extends AppCompatActivity {
     }
 
     /**
-     * @param view
+     * will the the user info in the database
+     * @param view the button that pressed
      */
     public void submitData(View view) {
         // לקבל את הנתונים של היוזר מהדאטה בייס
@@ -103,7 +104,9 @@ public class UploadUserInfoActivity extends AppCompatActivity {
 
 
     /**
-     *
+     *  get the user data from the data base
+     *  if the user have already data it will put the data in the input field and he can change it
+     *  else he will initialize the variable with all the fields to be null
      */
     public void getUserData() {
         myRef.addValueEventListener(new ValueEventListener() {
@@ -124,6 +127,7 @@ public class UploadUserInfoActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
+                //TODO לראות מה לעשות אם לא הצלחנו לגשת לנתונים
                 userModel = new User();
             }
         });
