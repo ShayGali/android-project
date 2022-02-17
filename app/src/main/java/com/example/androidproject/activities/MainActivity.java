@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
     public  FirebaseDatabase database = FirebaseDatabase.getInstance();
     public FirebaseUser currentUser;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
             Intent singToFirebase = AuthUI.getInstance().createSignInIntentBuilder().build();
             startActivityForResult(singToFirebase, SIGN_FROM_CREATE);
         } else {
-            //TODO: לשים בפונקציה
             checkIfTheUserInfoSaveInTheDataBase();
             popupDetails(true);
         }
