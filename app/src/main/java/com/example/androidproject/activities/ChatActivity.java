@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.androidproject.utilities.ChatRecyclerViewAdapter;
 import com.example.androidproject.utilities.LoadingAlert;
@@ -27,13 +28,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class ChatActivity extends AppCompatActivity {
+    private static final String DATABASE_FIRST_CHILD_PATH = "message_rooms";
 
     LoadingAlert loadingAlert = new LoadingAlert(this);
 
@@ -51,17 +49,16 @@ public class ChatActivity extends AppCompatActivity {
 
 
     EditText msgInput;
-
+    TextView roomTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Intent intent = getIntent();
         String roomId = intent.getExtras().getString("roomID");
-
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("message_rooms").child(roomId);
+        myRef = database.getReference(DATABASE_FIRST_CHILD_PATH).child(roomId);
 
         messages = new ArrayList<>();
 
@@ -83,6 +80,9 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         msgInput = findViewById(R.id.enter_new_message_input);
+
+        roomTitle = findViewById(R.id.room_title);
+        roomTitle.setText("room name");
 
         loadingAlert.startLoadingDialog();
         getMessages();
@@ -141,6 +141,5 @@ public class ChatActivity extends AppCompatActivity {
         });
         thread.start();
 
-//        MainActivity.showToastFromThread(this,map.toString());
     }
 }
