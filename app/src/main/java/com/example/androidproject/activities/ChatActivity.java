@@ -135,6 +135,9 @@ public class ChatActivity extends AppCompatActivity {
             String timeKeyForDataBase = msg.getTimestamp();
             msg.setTimestamp(null);
             myRef.child(timeKeyForDataBase).setValue(msg);
+            // למחוק את מה שנשאר בתיבת טקסט
+            // צריך למחוק אותו מ thread של ה UI
+            runOnUiThread(()-> msgInput.setText(""));
         });
         thread.start();
 
