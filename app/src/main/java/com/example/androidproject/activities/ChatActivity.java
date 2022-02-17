@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -134,7 +135,7 @@ public class ChatActivity extends AppCompatActivity {
     public void send_msg(View view) {
         Thread thread = new Thread(() -> {
             String msgContent = msgInput.getText().toString();
-            Message msg = new Message(msgContent, currentUser.getUid(), new Date());
+            Message msg = new Message(msgContent, currentUser.getUid(), LocalDateTime.now());
             String timeKeyForDataBase = msg.getTimestamp();
             msg.setTimestamp(null);
             myRef.child(timeKeyForDataBase).setValue(msg);

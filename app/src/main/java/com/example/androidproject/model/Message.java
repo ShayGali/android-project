@@ -4,17 +4,18 @@ import android.annotation.SuppressLint;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Message {
     @SuppressLint("SimpleDateFormat")
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     String messageContent;
     String senderId;
     String timestamp;
 
-    public Message(String messageContent, String senderId, Date timestamp) {
+    public Message(String messageContent, String senderId, LocalDateTime timestamp) {
         this.messageContent = messageContent;
         this.senderId = senderId;
         this.timestamp =  dateFormat.format(timestamp);
