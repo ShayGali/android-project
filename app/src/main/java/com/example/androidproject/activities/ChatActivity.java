@@ -128,10 +128,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    void displayMessages() {
-
-    }
-
     public void send_msg(View view) {
         Thread thread = new Thread(() -> {
             String msgContent = msgInput.getText().toString();
