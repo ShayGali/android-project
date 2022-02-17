@@ -26,16 +26,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="Enter new message"
-            />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <Button
             android:id="@+id/send_new_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="send" />
+            android:text="send"
+            android:onClick="send_msg"
+            />
     </LinearLayout>
 
 </LinearLayout>

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 
 import com.example.androidproject.utilities.ChatRecyclerViewAdapter;
 import com.example.androidproject.utilities.LoadingAlert;
@@ -24,7 +26,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -33,7 +39,7 @@ public class ChatActivity extends AppCompatActivity {
 
     FirebaseUser currentUser;
     FirebaseDatabase database;
-    DatabaseReference myRef; // reference to the path that the user data is save on the database
+    DatabaseReference myRef; // reference to the path of the msg room
 
     ArrayList<String> roomParticipants;
     ArrayList<Message> messages;
@@ -41,6 +47,10 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     ChatRecyclerViewAdapter adapter;
+
+
+    EditText msgInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +67,7 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.messagesRecyclerView);
 
         layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -70,6 +81,8 @@ public class ChatActivity extends AppCompatActivity {
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        msgInput = findViewById(R.id.enter_new_message_input);
+
         loadingAlert.startLoadingDialog();
         getMessages();
     }
@@ -81,15 +94,25 @@ public class ChatActivity extends AppCompatActivity {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(!messages.isEmpty()){
+                        messages.clear();
+                    }
+
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         // אם הגעתי למשתתפים
                         if (Objects.equals(postSnapshot.getKey(), "participants")) {
                             roomParticipants = (ArrayList<String>) postSnapshot.getValue();
 
-                        } else
-                            messages.add(postSnapshot.getValue(Message.class));
+                        } else {
+                            Message msg = postSnapshot.getValue(Message.class);
+                            assert msg != null;
+                            msg.setTimestamp(postSnapshot.getKey());
+                            messages.add(msg);
+                        }
                     }
                     adapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(messages.size() - 1);
+
                     loadingAlert.dismissDialog();
                 }
 
@@ -103,7 +126,21 @@ public class ChatActivity extends AppCompatActivity {
         thread.start();
     }
 
+
     void displayMessages() {
 
+    }
+
+    public void send_msg(View view) {
+        Thread thread = new Thread(() -> {
+            String msgContent = msgInput.getText().toString();
+            Message msg = new Message(msgContent, currentUser.getUid(), new Date());
+            String timeKeyForDataBase = msg.getTimestamp();
+            msg.setTimestamp(null);
+            myRef.child(timeKeyForDataBase).setValue(msg);
+        });
+        thread.start();
+
+//        MainActivity.showToastFromThread(this,map.toString());
     }
 }

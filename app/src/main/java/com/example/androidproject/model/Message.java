@@ -8,15 +8,13 @@ import java.util.Date;
 
 public class Message {
     @SuppressLint("SimpleDateFormat")
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    String ID;
     String messageContent;
     String senderId;
     String timestamp;
 
-    public Message(String ID,String messageContent, String senderId, Date timestamp) {
-        this.ID = ID;
+    public Message(String messageContent, String senderId, Date timestamp) {
         this.messageContent = messageContent;
         this.senderId = senderId;
         this.timestamp =  dateFormat.format(timestamp);
@@ -51,7 +49,4 @@ public class Message {
         this.timestamp = timestamp;
     }
 
-    public String getID() {
-        return ID;
-    }
 }
