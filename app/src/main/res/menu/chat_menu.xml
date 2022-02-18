@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/clear_chet"
+        android:title="@string/clear_the_chat"
+        app:showAsAction="never" />
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        app:showAsAction="never" />
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/log_out_item"
+        android:title="@string/log_out"
+        app:showAsAction="never" />
+</menu>
