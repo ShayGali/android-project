@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 
 import com.example.androidproject.R;
+import com.example.androidproject.utilities.LoadingAlert;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     public  FirebaseDatabase database = FirebaseDatabase.getInstance();
     public FirebaseUser currentUser;
 
+    LoadingAlert loadingAlert = new LoadingAlert(this);
+
 
 
     @Override
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        loadingAlert.startLoadingDialog();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser == null) {
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(singToFirebase, SIGN_FROM_CREATE);
         } else {
             checkIfTheUserInfoSaveInTheDataBase();
+            loadingAlert.dismissDialog();
             popupDetails(true);
         }
     }
@@ -109,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             currentUser = FirebaseAuth.getInstance().getCurrentUser();
             checkIfTheUserInfoSaveInTheDataBase();
+            loadingAlert.dismissDialog();
         } else {
             popupDetails(false);
             finish();// סוגר את המסך הנוכחי - מוציא אותו מהאפליקציה
@@ -135,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
         // TODO: כשהוא מתנתק להעביר אותו לדף חיבור
         AuthUI.getInstance().signOut(this).addOnCompleteListener(task -> {
             Toast.makeText(this, "You have logged-out", Toast.LENGTH_LONG).show();
-            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         });
     }
 

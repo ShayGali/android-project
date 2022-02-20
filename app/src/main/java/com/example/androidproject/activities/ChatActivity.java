@@ -45,6 +45,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final String DATABASE_CHAT_NAME_KEY = "chat name";
 
 
+
     LoadingAlert loadingAlert = new LoadingAlert(this);
 
 
@@ -150,6 +151,7 @@ public class ChatActivity extends AppCompatActivity {
     public void send_msg(View view) {
         Thread thread = new Thread(() -> {
             String msgContent = msgInput.getText().toString();
+            if (msgContent.equals("")) return;
             Message msg = new Message(msgContent, currentUser.getUid(), LocalDateTime.now());
             String timeKeyForDataBase = msg.getTimestamp();
             msg.setTimestamp(null);
@@ -231,7 +233,8 @@ public class ChatActivity extends AppCompatActivity {
         // TODO: כשהוא מתנתק להעביר אותו לדף חיבור
         AuthUI.getInstance().signOut(this).addOnCompleteListener(task -> {
             Toast.makeText(this, "You have logged-out", Toast.LENGTH_LONG).show();
-            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         });
     }
 }
