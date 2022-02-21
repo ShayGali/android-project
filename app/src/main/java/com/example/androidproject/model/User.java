@@ -5,8 +5,6 @@ import java.util.ArrayList;
 public class User {
     String userName;
     String country;
-
-
     ArrayList<String> categories;
     ArrayList<String> friends;
     ArrayList<String> rooms;
