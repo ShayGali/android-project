@@ -129,6 +129,7 @@ public class ChatActivity extends AppCompatActivity {
                         if (Objects.equals(postSnapshot.getKey(), DATABASE_PARTICIPANTS_KEY)) {
                             roomParticipantsID = (ArrayList<String>) postSnapshot.getValue(); // מביאים את הid שלהם
                             getUsersByID(); // מביאים את המידע עליהם
+
                         } else if (Objects.equals(postSnapshot.getKey(), DATABASE_CHAT_NAME_KEY)) {
                             runOnUiThread(() -> roomNameTextView.setText(postSnapshot.getValue(String.class)));
                         } else {
