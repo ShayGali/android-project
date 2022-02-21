@@ -74,7 +74,6 @@ public class UploadUserInfoActivity extends AppCompatActivity {
     public void submitData(View view) {
         // לקבל את הנתונים של היוזר מהדאטה בייס
         Thread thread = new Thread(() -> {
-            getUserData();
             // לקבל את כל מה שהוא בחר מהרשימה
             ArrayList<String> selectedCategories = new ArrayList<>();
             for (int i = 0; i < listViewData.getCount(); i++) {
@@ -85,7 +84,6 @@ public class UploadUserInfoActivity extends AppCompatActivity {
 
             String country = countryInput.getText().toString();
             String userName = userNameInput.getText().toString();
-
 
             // בדיקה אם באמת הכניסו לי את השדות
             if (country.trim().length() > 0) userModel.setCountry(country);

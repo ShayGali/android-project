@@ -54,15 +54,19 @@ public class ChatActivity extends AppCompatActivity {
     DatabaseReference messagesPerRoomRef; // reference to the path of the msg room
     DatabaseReference usersRef; // reference to the path of the users
 
+    // all the messages of the chat
     ArrayList<Message> messages;
+
+    // ID of the participants
     ArrayList<String> roomParticipantsID;
+
+    // the data of the users
     Map<String, User> roomParticipants;
 
 
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     ChatRecyclerViewAdapter adapter;
-
 
     EditText msgInput;
     TextView roomNameTextView;
@@ -71,8 +75,10 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         Intent intent = getIntent();
         String roomId = intent.getExtras().getString("roomID");
+
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
         messagesPerRoomRef = database.getReference(DATABASE_MESSAGE_KEY).child(roomId);
@@ -108,6 +114,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     void getMessages() {
+
         Thread thread = new Thread(() -> {
             messagesPerRoomRef.addValueEventListener(new ValueEventListener() {
                 @SuppressLint("NotifyDataSetChanged")
