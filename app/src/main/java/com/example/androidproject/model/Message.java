@@ -11,6 +11,7 @@ public class Message {
     @SuppressLint("SimpleDateFormat")
     public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    String ID;
     String messageContent;
     String senderId;
     String timestamp;
@@ -50,4 +51,12 @@ public class Message {
         this.timestamp = timestamp;
     }
 
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 }

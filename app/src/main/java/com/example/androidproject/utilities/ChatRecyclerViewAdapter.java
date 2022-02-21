@@ -10,6 +10,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.activities.ChatActivity;
+import com.example.androidproject.activities.MainActivity;
 import com.example.androidproject.model.Message;
 import com.example.androidproject.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,11 +36,24 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = null;
         if (viewType == VIEW_TYPE_SENT)
-            return new MessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.message_send_layout, parent, false));
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_send_layout, parent, false);
+        else if (viewType == VIEW_TYPE_RECEIVED)
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_received_layout, parent, false);
 
-        return new MessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.message_received_layout, parent, false));
+        assert v != null;
+        MessageViewHolder messageViewHolder = new MessageViewHolder(v);
 
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                return true;
+            }
+        });
+
+        return messageViewHolder;
     }
 
     @Override
@@ -76,8 +91,6 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         }
         return VIEW_TYPE_RECEIVED;
     }
-
-
 
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {

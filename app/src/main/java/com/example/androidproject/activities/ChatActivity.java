@@ -36,7 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
@@ -112,19 +111,19 @@ public class ChatActivity extends AppCompatActivity {
         loadingAlert.startLoadingDialog();
 
         getMessages();
-        getParticipantsValue();
+        getParticipantsIDs();
         getChatName();
     }
 
 
-    void getParticipantsValue(){
+    void getParticipantsIDs(){
         roomRef.child(DATABASE_PARTICIPANTS_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     roomParticipantsID.add(postSnapshot.getValue(String.class));
                 }
-                getUsersByID();
+                getUsersDataByID();
             }
 
             @Override
@@ -157,6 +156,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Message msg = postSnapshot.getValue(Message.class);
+                    assert msg != null;
+                    msg.setID(postSnapshot.getKey());
                     messages.add(msg);
                 }
                 recyclerView.scrollToPosition(messages.size()-1);
@@ -173,6 +174,8 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Message msg = snapshot.getValue(Message.class);
+                assert msg != null;
+                msg.setID(snapshot.getKey());
                 messages.add(msg);
                 recyclerView.smoothScrollToPosition(messages.size()-1);
             }
@@ -219,9 +222,10 @@ public class ChatActivity extends AppCompatActivity {
     /**
      *
      */
-    public void getUsersByID() {
+    public void getUsersDataByID() {
         for (String userId : roomParticipantsID){
             usersRef.child(userId).addValueEventListener(new ValueEventListener() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     roomParticipants.put(userId, snapshot.getValue(User.class));
