@@ -17,7 +17,7 @@ public class ChatsRoomsActivity extends AppCompatActivity {
     }
 
     public void goToChat(View view) {
-        String roomID = "239ea67e-7b58-4c80-93ea-8f381f598f4f";
+        String roomID = "239ea67e-7b58-4c80-93ea-8f381f598f4h";
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("roomID", roomID);
         startActivity(intent);
