@@ -79,9 +79,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 arrayAdapter.getFilter().filter(newText);
-
                 return false;
             }
         });
