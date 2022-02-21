@@ -1,6 +1,7 @@
 package com.example.androidproject.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,6 +26,7 @@ import com.example.androidproject.model.Message;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,14 +38,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
-    private static final String DATABASE_MESSAGE_KEY = "message_rooms";
+    private static final String DATABASE_ROOMS_KEY = "message_rooms";
     private static final String DATABASE_USERS_KEY = "users";
     private static final String DATABASE_PARTICIPANTS_KEY = "participants";
     private static final String DATABASE_CHAT_NAME_KEY = "chat name";
-
+    private static final String DATABASE_MESSAGES_KEY = "messages";
 
 
     LoadingAlert loadingAlert = new LoadingAlert(this);
@@ -51,7 +52,7 @@ public class ChatActivity extends AppCompatActivity {
 
     FirebaseUser currentUser;
     FirebaseDatabase database;
-    DatabaseReference messagesPerRoomRef; // reference to the path of the msg room
+    DatabaseReference roomRef; // reference to the path of the msg room
     DatabaseReference usersRef; // reference to the path of the users
 
     // all the messages of the chat
@@ -81,7 +82,7 @@ public class ChatActivity extends AppCompatActivity {
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        messagesPerRoomRef = database.getReference(DATABASE_MESSAGE_KEY).child(roomId);
+        roomRef = database.getReference(DATABASE_ROOMS_KEY).child(roomId);
         usersRef = database.getReference(DATABASE_USERS_KEY);
 
         messages = new ArrayList<>();
@@ -109,49 +110,95 @@ public class ChatActivity extends AppCompatActivity {
         roomNameTextView = findViewById(R.id.room_name);
 
         loadingAlert.startLoadingDialog();
+
         getMessages();
+        getParticipantsValue();
+        getChatName();
     }
 
 
+    void getParticipantsValue(){
+        roomRef.child(DATABASE_PARTICIPANTS_KEY).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    roomParticipantsID.add(postSnapshot.getValue(String.class));
+                }
+                getUsersByID();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    void getChatName(){
+        roomRef.child(DATABASE_CHAT_NAME_KEY).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                runOnUiThread(() -> roomNameTextView.setText(snapshot.getValue(String.class)));
+                loadingAlert.dismissDialog();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     void getMessages() {
 
-        Thread thread = new Thread(() -> {
-            messagesPerRoomRef.addValueEventListener(new ValueEventListener() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (!messages.isEmpty()) {
-                        messages.clear();
-                    }
-
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        // אם הגעתי למשתתפים
-                        if (Objects.equals(postSnapshot.getKey(), DATABASE_PARTICIPANTS_KEY)) {
-                            roomParticipantsID = (ArrayList<String>) postSnapshot.getValue(); // מביאים את הid שלהם
-                            getUsersByID(); // מביאים את המידע עליהם
-                        } else if (Objects.equals(postSnapshot.getKey(), DATABASE_CHAT_NAME_KEY)) {
-                            runOnUiThread(() -> roomNameTextView.setText(postSnapshot.getValue(String.class)));
-                        } else {
-                            Message msg = postSnapshot.getValue(Message.class);
-                            assert msg != null;
-                            msg.setTimestamp(postSnapshot.getKey());
-                            messages.add(msg);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(messages.size() - 1);
-
-                    loadingAlert.dismissDialog();
+        roomRef.child(DATABASE_MESSAGES_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Message msg = postSnapshot.getValue(Message.class);
+                    messages.add(msg);
                 }
+                recyclerView.scrollToPosition(messages.size()-1);
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // Failed to read value
-                }
-            });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
         });
-        thread.start();
+
+        roomRef.child(DATABASE_MESSAGES_KEY).addChildEventListener(new ChildEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Message msg = snapshot.getValue(Message.class);
+                messages.add(msg);
+                recyclerView.smoothScrollToPosition(messages.size()-1);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                messages.clear();
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 
@@ -160,9 +207,7 @@ public class ChatActivity extends AppCompatActivity {
             String msgContent = msgInput.getText().toString();
             if (msgContent.equals("")) return;
             Message msg = new Message(msgContent, currentUser.getUid(), LocalDateTime.now());
-            String timeKeyForDataBase = msg.getTimestamp();
-            msg.setTimestamp(null);
-            messagesPerRoomRef.child(timeKeyForDataBase).setValue(msg);
+            roomRef.child(DATABASE_MESSAGES_KEY).push().setValue(msg);
             // למחוק את מה שנשאר בתיבת טקסט
             // צריך למחוק אותו מ thread של ה UI
             runOnUiThread(() -> msgInput.setText(""));
@@ -175,15 +220,11 @@ public class ChatActivity extends AppCompatActivity {
      *
      */
     public void getUsersByID() {
-        Thread thread = new Thread(() -> {
-            usersRef.addValueEventListener(new ValueEventListener() {
-                @SuppressLint("NotifyDataSetChanged")
+        for (String userId : roomParticipantsID){
+            usersRef.child(userId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (String userID : roomParticipantsID) {
-                        if (snapshot.child(userID).exists())
-                            roomParticipants.put(userID, snapshot.child(userID).getValue(User.class));
-                    }
+                    roomParticipants.put(userId, snapshot.getValue(User.class));
                     adapter.notifyDataSetChanged();
                 }
 
@@ -192,8 +233,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-        });
-        thread.start();
+        }
     }
 
     /**
@@ -202,13 +242,7 @@ public class ChatActivity extends AppCompatActivity {
      * add then save the the chat name
      */
     public void clearMessages() {
-
-        Map<String, List<String>> roomParticipantsKeyValue = new LinkedHashMap<>();
-        roomParticipantsKeyValue.put(DATABASE_PARTICIPANTS_KEY, roomParticipantsID);
-
-        messagesPerRoomRef.setValue(roomParticipantsKeyValue);
-        messagesPerRoomRef.child(DATABASE_CHAT_NAME_KEY).setValue(roomNameTextView.getText().toString());
-
+        roomRef.child(DATABASE_MESSAGES_KEY).removeValue();
     }
 
 

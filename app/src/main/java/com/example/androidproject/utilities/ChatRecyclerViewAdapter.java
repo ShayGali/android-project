@@ -77,6 +77,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         return VIEW_TYPE_RECEIVED;
     }
 
+
+
+
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView messageContent;

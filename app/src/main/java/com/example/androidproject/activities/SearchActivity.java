@@ -8,14 +8,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.androidproject.R;
+import com.example.androidproject.model.User;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private static final String DATABASE_USERS_KEY = "users";
+
+//    FirebaseUser currentUser; //TODO - check for later
+    FirebaseDatabase database;
+    DatabaseReference usersRef;
+
     // Testing
     ListView listView;
-    String[] name = {"jone","benny","shimmy","itzhak","yosef"};
+    ArrayList<User> players;
+    Map<String, User> playersNames;
 
     ArrayAdapter<String> arrayAdapter;
 
@@ -26,9 +41,19 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference(DATABASE_USERS_KEY);
+        playersNames = new LinkedHashMap<>();
+
+        getUsers();
+
         listView = findViewById(R.id.players_listView);
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,name);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,players);
         listView.setAdapter(arrayAdapter);
+
+    }
+
+    private void getUsers() {
 
     }
 
