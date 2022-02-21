@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,7 +33,7 @@ public class SearchActivity extends AppCompatActivity {
     ArrayList<User> players;
     Map<String, User> playersNames;
 
-    ArrayAdapter<String> arrayAdapter;
+    ArrayAdapter<User> arrayAdapter;
 
 
 
@@ -48,12 +49,17 @@ public class SearchActivity extends AppCompatActivity {
         getUsers();
 
         listView = findViewById(R.id.players_listView);
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,players);
+        arrayAdapter = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1,players);
         listView.setAdapter(arrayAdapter);
 
     }
 
     private void getUsers() {
+
+        Thread thread = new Thread(() -> {
+
+        });
+        thread.start();
 
     }
 
