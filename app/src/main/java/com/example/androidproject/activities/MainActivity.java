@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             checkIfTheUserInfoSaveInTheDataBase();
             loadingAlert.dismissDialog();
-            popupDetails(true);
+//            popupDetails(true);
         }
     }
 

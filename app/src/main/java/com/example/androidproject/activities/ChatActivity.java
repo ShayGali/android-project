@@ -71,6 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     EditText msgInput;
     TextView roomNameTextView;
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +103,7 @@ public class ChatActivity extends AppCompatActivity {
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(getDrawable(R.drawable.divider_line));
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         msgInput = findViewById(R.id.enter_new_message_input);
@@ -160,7 +162,6 @@ public class ChatActivity extends AppCompatActivity {
                     msg.setID(postSnapshot.getKey());
                     messages.add(msg);
                 }
-                recyclerView.scrollToPosition(messages.size()-1);
             }
 
             @Override
@@ -168,7 +169,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-
         roomRef.child(DATABASE_MESSAGES_KEY).addChildEventListener(new ChildEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override

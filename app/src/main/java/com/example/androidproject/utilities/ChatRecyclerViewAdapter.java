@@ -45,13 +45,13 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         assert v != null;
         MessageViewHolder messageViewHolder = new MessageViewHolder(v);
 
-        v.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
-                return true;
-            }
-        });
+//        v.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//
+//                return true;
+//            }
+//        });
 
         return messageViewHolder;
     }
