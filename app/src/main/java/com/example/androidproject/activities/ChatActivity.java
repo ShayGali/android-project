@@ -195,6 +195,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 messages.clear();
                 adapter.notifyDataSetChanged();
+                MainActivity.showToastFromThread(ChatActivity.this, "all the messages was delete");
+
             }
 
             @Override
