@@ -195,6 +195,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 messages.clear();
+                adapter.notifyDataSetChanged();
             }
 
             @Override
