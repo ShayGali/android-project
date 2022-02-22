@@ -178,7 +178,7 @@ public class ChatActivity extends AppCompatActivity {
                 msg.setID(snapshot.getKey());
                 messages.add(msg);
                 try {
-                    recyclerView.scrollToPosition(messages.size());
+                    recyclerView.scrollToPosition(messages.size()-1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
