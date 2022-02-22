@@ -162,6 +162,7 @@ public class ChatActivity extends AppCompatActivity {
                     msg.setID(postSnapshot.getKey());
                     messages.add(msg);
                 }
+                recyclerView.scrollToPosition(messages.size()-1);
             }
 
             @Override
@@ -211,7 +212,7 @@ public class ChatActivity extends AppCompatActivity {
     public void send_msg(View view) {
         Thread thread = new Thread(() -> {
             String msgContent = msgInput.getText().toString();
-            if (msgContent.equals("")) return;
+            if (msgContent.trim().equals("")) return;
             Message msg = new Message(msgContent, currentUser.getUid(), LocalDateTime.now());
             roomRef.child(DATABASE_MESSAGES_KEY).push().setValue(msg);
             // למחוק את מה שנשאר בתיבת טקסט
