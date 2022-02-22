@@ -173,8 +173,6 @@ public class ChatActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                MainActivity.showToastFromThread(ChatActivity.this, "add");
-
                 Message msg = snapshot.getValue(Message.class);
                 assert msg != null;
                 msg.setID(snapshot.getKey());
@@ -204,8 +202,6 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                MainActivity.showToastFromThread(ChatActivity.this, "onCancelled");
-
             }
         });
 
