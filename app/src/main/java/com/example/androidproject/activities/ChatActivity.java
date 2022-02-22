@@ -173,11 +173,18 @@ public class ChatActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                MainActivity.showToastFromThread(ChatActivity.this, "add");
+
                 Message msg = snapshot.getValue(Message.class);
                 assert msg != null;
                 msg.setID(snapshot.getKey());
                 messages.add(msg);
-                recyclerView.smoothScrollToPosition(messages.size()-1);
+                try {
+                    recyclerView.scrollToPosition(messages.size());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -188,16 +195,15 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 messages.clear();
-
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                MainActivity.showToastFromThread(ChatActivity.this, "onCancelled");
 
             }
         });
