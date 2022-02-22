@@ -1,5 +1,6 @@
 package com.example.androidproject.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
@@ -8,33 +9,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
     private static final String DATABASE_USERS_KEY = "users";
 
-//    FirebaseUser currentUser; //TODO - check for later
+    //    FirebaseUser currentUser; //TODO - check for later
     FirebaseDatabase database;
     DatabaseReference usersRef;
 
     // Testing
     ListView listView;
     ArrayList<User> players;
-    Map<String, User> playersNames;
+    ArrayList<String> playerNames;
 
-    ArrayAdapter<User> arrayAdapter;
-
+    ArrayAdapter<String> arrayAdapter;
 
 
     @Override
@@ -44,28 +44,22 @@ public class SearchActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference(DATABASE_USERS_KEY);
-        playersNames = new LinkedHashMap<>();
+
+        players = new ArrayList<>();
+        playerNames = new ArrayList<>();
 
         getUsers();
+        getPlayerNames();
 
         listView = findViewById(R.id.players_listView);
-        arrayAdapter = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1,players);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, playerNames);
         listView.setAdapter(arrayAdapter);
-
-    }
-
-    private void getUsers() {
-
-        Thread thread = new Thread(() -> {
-
-        });
-        thread.start();
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu,menu);
+        getMenuInflater().inflate(R.menu.search_menu, menu);
 
         MenuItem menuItem = menu.findItem(R.id.search_action);
         SearchView searchView = (SearchView) menuItem.getActionView();
@@ -79,11 +73,35 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                arrayAdapter.getFilter().filter(newText);
+//                arrayAdapter.getFilter().filter(newText);
                 return false;
             }
         });
 
         return super.onCreateOptionsMenu(menu);
     }
+
+    void getUsers() {
+        usersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    players.add(postSnapshot.getValue(User.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    void getPlayerNames() {
+        for (User obj : players) {
+            playerNames.add(obj.getUserName());
+        }
+    }
+
 }

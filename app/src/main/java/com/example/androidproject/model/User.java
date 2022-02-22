@@ -62,5 +62,14 @@ public class User {
         this.rooms = rooms;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "userName='" + userName + '\'' +
+                ", country='" + country + '\'' +
+                ", categories=" + categories +
+                ", friends=" + friends +
+                ", rooms=" + rooms +
+                '}';
+    }
 }
