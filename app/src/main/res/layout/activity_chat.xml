@@ -9,7 +9,7 @@
     tools:context=".activities.ChatActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/oooo"
+        android:id="@+id/top_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -34,45 +34,39 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/send_msg_layout"
 
-        android:layout_below="@+id/oooo"
+        android:layout_below="@+id/top_bar_layout"
         android:layout_marginTop="2dp" />
 
     <LinearLayout
         android:id="@+id/send_msg_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foregroundGravity="bottom"
-        android:orientation="horizontal"
-
         android:layout_alignParentBottom="true"
-        >
+        android:foregroundGravity="bottom"
+
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/enter_new_message_input"
-            android:layout_width="331dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="70"
             android:ems="10"
             android:hint="Enter new message"
             android:inputType="textPersonName"
             android:minHeight="48dp" />
 
-<!--        <Button-->
-<!--            android:id="@+id/send_new_message"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:onClick="send_msg"-->
-<!--            android:text="send" />-->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/send_new_message"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_gravity="end"
             android:clickable="true"
             android:contentDescription="@string/send"
-            android:onClick="send_msg"
-            app:srcCompat="@drawable/ic_send" />
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            app:srcCompat="@drawable/ic_send"
+            tools:ignore="ImageContrastCheck" />
     </LinearLayout>
 </RelativeLayout>
