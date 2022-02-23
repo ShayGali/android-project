@@ -141,7 +141,6 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 runOnUiThread(() -> roomNameTextView.setText(snapshot.getValue(String.class)));
                 loadingAlert.dismissDialog();
-
             }
 
             @Override

@@ -7,8 +7,10 @@ import androidx.appcompat.widget.SearchView;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
@@ -20,8 +22,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class SearchActivity extends AppCompatActivity {
+
+    //    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, Long.MAX_VALUE, TimeUnit.NANOSECONDS, new LinkedBlockingQueue<>());
+    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 
     private static final String DATABASE_USERS_KEY = "users";
 
@@ -36,6 +46,9 @@ public class SearchActivity extends AppCompatActivity {
 
     ArrayAdapter<String> arrayAdapter;
 
+    //Threads
+    Thread threadA,threadB,threadC;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +62,10 @@ public class SearchActivity extends AppCompatActivity {
         playerNames = new ArrayList<>();
 
         getUsers();
-        getPlayerNames();
 
         listView = findViewById(R.id.players_listView);
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, playerNames);
         listView.setAdapter(arrayAdapter);
-
     }
 
     @Override
@@ -73,7 +84,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                arrayAdapter.getFilter().filter(newText);
+                arrayAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -85,10 +96,11 @@ public class SearchActivity extends AppCompatActivity {
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                players.clear();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     players.add(postSnapshot.getValue(User.class));
                 }
+                getPlayerNames();
             }
 
             @Override
@@ -99,9 +111,15 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     void getPlayerNames() {
+        playerNames.clear();
         for (User obj : players) {
+            System.out.println(obj.getUserName());
             playerNames.add(obj.getUserName());
         }
+        arrayAdapter.notifyDataSetChanged();
     }
 
+    public void showList(View view) {
+        System.out.println(players.toString());
+    }
 }
