@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:clickable="true"
+            android:onClick="send_msg"
             android:contentDescription="@string/send"
             android:minWidth="48dp"
             android:minHeight="48dp"
