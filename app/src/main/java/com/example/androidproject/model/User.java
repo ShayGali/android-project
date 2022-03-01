@@ -1,8 +1,11 @@
 package com.example.androidproject.model;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
     String userName;
     String country;
     ArrayList<String> categories;
@@ -19,7 +22,6 @@ public class User {
 
 
     public User() {
-
     }
 
     public String getUserName() {

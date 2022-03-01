@@ -1,73 +1,107 @@
 package com.example.androidproject.activities;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.androidproject.utilities.UserHandler;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.io.Serializable;
 
 public class SearchActivity extends AppCompatActivity {
 
-    //    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, Long.MAX_VALUE, TimeUnit.NANOSECONDS, new LinkedBlockingQueue<>());
-    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
+    // Current User
+    public FirebaseUser currentUserData;
+    public String currentsUserUUID;
 
-    private static final String DATABASE_USERS_KEY = "users";
-
-    //    FirebaseUser currentUser; //TODO - check for later
-    FirebaseDatabase database;
-    DatabaseReference usersRef;
+    // Selected User's profile pop-up
+    TextView selectedUsersName;
 
     // Testing
     ListView listView;
-    ArrayList<User> players;
-    ArrayList<String> playerNames;
+    //        ArrayList<User> players;
+    //TODO : check if works with adapter...
 
-    ArrayAdapter<String> arrayAdapter;
+    public static ArrayAdapter<String> arrayAdapter;
 
-    //Threads
-    Thread threadA,threadB,threadC;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        database = FirebaseDatabase.getInstance();
-        usersRef = database.getReference(DATABASE_USERS_KEY);
+        currentUserData = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUserData != null)
+            currentsUserUUID = currentUserData.getUid();
 
-        players = new ArrayList<>();
-        playerNames = new ArrayList<>();
+        UserHandler.getUsers();
+        UserHandler.getPlayerNames();
 
-        getUsers();
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, UserHandler.playerNames);
 
+//        selectedUsersName = findViewById(R.id.selected_users_name);
         listView = findViewById(R.id.players_listView);
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, playerNames);
+
+        arrayAdapter.notifyDataSetChanged();
         listView.setAdapter(arrayAdapter);
+
+        // Events listener for pressing on a user's name in the listView
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+
+                //get the item and transform it to your JsonBean
+                String item = (String) adapterView.getItemAtPosition(index); // item = name
+                String id;
+
+                Intent intent = new Intent(getApplicationContext(),PlayerProfileActivity.class);
+
+                // Packets up all intents with data
+                for (User user : UserHandler.userMap.values()) {
+                    if (user.getUserName().equals(item)) {
+//                        System.out.println("IF 1 - WORKS ");
+                        intent.putExtra("playersObj",(Serializable) user) ;
+                        UserHandler.getUserUUIDByName(item);
+                        if (UserHandler.selectedUserUUID != null) {
+//                            System.out.println("IF 2 - WORKS ");
+                            intent.putExtra("playersUUID",UserHandler.selectedUserUUID);
+                            UserHandler.getSelectedPlayersCategories(UserHandler.selectedUserUUID);
+                            intent.putExtra("amountOfFriends",UserHandler.selectedPlayersCategories.size());
+                            intent.putStringArrayListExtra("tagList",UserHandler.selectedPlayersCategories);
+                        }
+                    }
+                }
+                startActivity(intent);
+
+            }
+        });
+
     }
 
+    // configs the search icon in top menu bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
@@ -92,34 +126,8 @@ public class SearchActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    void getUsers() {
-        usersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                players.clear();
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    players.add(postSnapshot.getValue(User.class));
-                }
-                getPlayerNames();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-    }
 
-    void getPlayerNames() {
-        playerNames.clear();
-        for (User obj : players) {
-            System.out.println(obj.getUserName());
-            playerNames.add(obj.getUserName());
-        }
-        arrayAdapter.notifyDataSetChanged();
-    }
 
-    public void showList(View view) {
-        System.out.println(players.toString());
-    }
 }

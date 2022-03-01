@@ -7,4 +7,11 @@
     <string name="clear_the_chat">clear the chat</string>
     <string name="textview">TextView</string>
     <string name="send">send</string>
+    <string name="matching_tags">Matching Tags</string>
+    <string name="actions_txt">Add Player</string>
+    <string name="some_description">some description</string>
+    <string name="add_friend_button">Add Player</string>
+    <string name="close_alert">Close</string>
+    <string name="tags">"Tags "</string>
+    <string name="amount_title">Friends</string>
 </resources>

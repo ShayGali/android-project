@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_player_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layoutTop"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/selected_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:background="#959595"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="25dp"
+            android:gravity="center"
+            android:scaleType="center"
+            android:textSize="72sp"
+            app:layout_constraintBottom_toTopOf="@+id/country"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+
+        <TextView
+            android:id="@+id/country"
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:background="#333333"
+            android:gravity="center"
+            android:scaleType="center"
+            android:textSize="32sp"
+            android:textColor="@color/purple_200"
+            app:layout_constraintBottom_toTopOf="@+id/friends_amount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selected_user_name" />
+
+        <TextView
+            android:id="@+id/friends_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/purple_200"
+            android:scaleType="center"
+            android:gravity="center"
+            android:textSize="28sp"
+            android:textColor="#333333"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/country" />
+
+        <TextView
+            android:id="@+id/tags_title"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="#FFFFFF"
+            android:gravity="center"
+            android:scaleType="center"
+            android:text="@string/matching_tags"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutTop" />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutBottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <ListView
+            android:id="@+id/tag_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="ltr"
+            />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/extended_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginVertical="95dp"
+            android:contentDescription="@string/some_description"
+            android:gravity="bottom|end"
+            android:text="@string/actions_txt"
+            app:icon="@drawable/ic_add"
+             />
+
+    </RelativeLayout>
+</LinearLayout>
