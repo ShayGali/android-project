@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
-import com.example.androidproject.utilities.UserHandler;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
