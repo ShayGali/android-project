@@ -270,7 +270,7 @@ public class ChatActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
-        if (item.getItemId() == R.id.log_out_item) {
+        if (item.getItemId() == R.id.open_friend_req_dialog) {
             logout();
         }
         return true;

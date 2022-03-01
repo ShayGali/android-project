@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +14,8 @@ import android.widget.Toast;
 
 
 import com.example.androidproject.R;
+import com.example.androidproject.model.User;
+import com.example.androidproject.utilities.FriendsReqDialog;
 import com.example.androidproject.utilities.LoadingAlert;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,11 +26,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int SIGN_FROM_CREATE = 1;
+    public static final String FRIEND_REQUEST_PATH = "friend request";
     public  FirebaseDatabase database = FirebaseDatabase.getInstance();
     public FirebaseUser currentUser;
 
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     /**
      * what happen when the user press on item in the list
      *
@@ -76,14 +81,53 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.log_out_item) {
-            logout();
+        if (item.getItemId() == R.id.open_friend_req_dialog) {
+            getFriendsReq();
+
         }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
         return true;
+    }
+
+
+
+    public void getFriendsReq(){
+        DatabaseReference myRef = database.getReference("users");
+        myRef.child(currentUser.getUid()).child(FRIEND_REQUEST_PATH).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<User> users = new LinkedList<>();
+                FriendsReqDialog friendsReqDialog = new FriendsReqDialog(MainActivity.this,users);
+                if(dataSnapshot.exists()){ // אם אין עליו מידע בדאטה בייס
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                        myRef.child(postSnapshot.getValue(String.class)).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                users.add(snapshot.getValue(User.class));
+                                friendsReqDialog.notifyAdapter();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+                }
+
+                friendsReqDialog.startLoadingDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
     }
 
     /**
@@ -186,6 +230,13 @@ public class MainActivity extends AppCompatActivity {
 
     public static void showToastFromThread(final Activity activity, final String displayMsg) {
         activity.runOnUiThread(() -> Toast.makeText(activity, displayMsg, Toast.LENGTH_SHORT).show());
+    }
+
+    public void acceptFriendReq(String friendID){
+
+    }
+    public void rejectFriendReq(String friendID){
+
     }
 }
 

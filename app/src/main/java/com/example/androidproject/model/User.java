@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class User implements Serializable {
+    String ID;
     String userName;
     String country;
     ArrayList<String> categories;
@@ -62,6 +63,14 @@ public class User implements Serializable {
 
     public void setRooms(ArrayList<String> rooms) {
         this.rooms = rooms;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     @Override

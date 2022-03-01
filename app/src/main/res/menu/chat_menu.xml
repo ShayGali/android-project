@@ -10,7 +10,7 @@
         android:title="@string/settings"
         app:showAsAction="never" />
     <item xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/log_out_item"
+        android:id="@+id/open_friend_req_dialog"
         android:title="@string/log_out"
         app:showAsAction="never" />
 </menu>
