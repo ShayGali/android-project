@@ -33,27 +33,26 @@ import java.util.Map;
 public class SearchActivity extends AppCompatActivity {
 
     // Keys
-    private  final String DATABASE_USERS_KEY = "users";
+    private final String DATABASE_USERS_KEY = "users";
 
     // Database properties:
-    public  final FirebaseDatabase DATABASE = FirebaseDatabase.getInstance();
-    public  final DatabaseReference USERS_REF = DATABASE.getReference(DATABASE_USERS_KEY);
+    public final FirebaseDatabase DATABASE = FirebaseDatabase.getInstance();
+    public final DatabaseReference USERS_REF = DATABASE.getReference(DATABASE_USERS_KEY);
 
     // Current User
     public FirebaseUser currentUserData;
-    public String currentsUserUUID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public String currentsUserUUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     // DataMembers
     public Map<String, User> userMap = new HashMap<>();
     public ArrayList<String> playerNames = new ArrayList<>();
-    public  ArrayList<String> selectedPlayersCategories = new ArrayList<>();
+    public ArrayList<String> selectedPlayersCategories = new ArrayList<>();
 
     // Testing
     ListView listView;
 //            ArrayList<User> players;
 
     public static ArrayAdapter<String> arrayAdapter;
-
 
 
     @Override
@@ -67,9 +66,10 @@ public class SearchActivity extends AppCompatActivity {
             currentsUserUUID = currentUserData.getUid();
 
         getUsers();
-
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, playerNames);
-
+//
+        playerNames = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, playerNames);
+//
 //        selectedUsersName = findViewById(R.id.selected_users_name);
         listView = findViewById(R.id.players_listView);
 
@@ -85,20 +85,20 @@ public class SearchActivity extends AppCompatActivity {
                 String item = (String) adapterView.getItemAtPosition(index); // item = name
                 String id;
 
-                Intent intent = new Intent(getApplicationContext(),PlayerProfileActivity.class);
+                Intent intent = new Intent(getApplicationContext(), PlayerProfileActivity.class);
 
                 // Packets up all intents with data
                 for (User user : userMap.values()) {
                     if (user.getUserName().equals(item)) {
 ////                        System.out.println("IF 1 - WORKS ");
-                        intent.putExtra("playersObj",(Serializable) user) ;
+                        intent.putExtra("playersObj", (Serializable) user);
                         getUserUUIDByName(item);
                         if (selectedUserUUID != null) {
 ////                            System.out.println("IF 2 - WORKS ");
-                            intent.putExtra("playersUUID",selectedUserUUID);
-                            getSelectedPlayersCategories(selectedUserUUID);
-                            intent.putExtra("amountOfFriends",selectedPlayersCategories.size());
-                            intent.putStringArrayListExtra("tagList",selectedPlayersCategories);
+                            intent.putExtra("playersUUID", selectedUserUUID);
+//                            getSelectedPlayersCategories(selectedUserUUID);
+//                            intent.putExtra("amountOfFriends", selectedPlayersCategories.size());
+//                            intent.putStringArrayListExtra("tagList", selectedPlayersCategories);
                         }
                     }
                 }
@@ -135,10 +135,11 @@ public class SearchActivity extends AppCompatActivity {
 
     /**************************************************************************/
 //                               Database Methods
+
     /**************************************************************************/
 
     // Method for getting all users as UserObject from DB and insert into MAP
-    public  void getUsers() {
+    public void getUsers() {
         USERS_REF.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -157,7 +158,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     // Gets from map all user's names and adds them in to an arrayList
-    public  void getPlayerNames() {
+    public void getPlayerNames() {
         playerNames.clear();
         for (Map.Entry<String, User> entry : userMap.entrySet()) {
             String key = entry.getKey();
@@ -168,11 +169,13 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     // Gets selected players categories by UUID
-    public  void getSelectedPlayersCategories(String key) {
+    public void getSelectedPlayersCategories(String key) {
         selectedPlayersCategories.clear();
         for (Map.Entry<String, User> entry : userMap.entrySet()) {
             if (key.equals(entry.getKey())) {
-                selectedPlayersCategories.addAll(entry.getValue().getCategories());
+                if (entry.getValue().getCategories() != null)
+                    selectedPlayersCategories.addAll(entry.getValue().getCategories());
+                else selectedPlayersCategories.add("");
             }
         }
     }
@@ -184,9 +187,9 @@ public class SearchActivity extends AppCompatActivity {
      * @PARAM: name
      * @RETURN: none
      */
-    public  String selectedUserUUID;
+    public String selectedUserUUID;
 
-    public  void getUserUUIDByName(String name) {
+    public void getUserUUIDByName(String name) {
         selectedUserUUID = "";
         for (Map.Entry<String, User> entry : userMap.entrySet()) {
             if (entry.getValue().getUserName().equals(name)) {
@@ -195,7 +198,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    public  User getUserObjByUUID(String UUID) {
+    public User getUserObjByUUID(String UUID) {
 
         for (Map.Entry<String, User> entry : userMap.entrySet()) {
             if (entry.getKey().equals(UUID))
@@ -205,30 +208,5 @@ public class SearchActivity extends AppCompatActivity {
         return null;
     }
 
-    /**
-     * Adds to current player's friends list
-     * selected player's Profile
-     *
-     * @PARAM: String playersUUID
-     * @RETURN: none
-     */
-    ArrayList<String> currentFriendsList;
-    public void addPlayerToFriends(String playersUUID) {
 
-        USERS_REF.child(currentsUserUUID).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (getUserObjByUUID(currentsUserUUID) != null) {
-                    currentFriendsList = snapshot.getValue(ArrayList.class);
-                    assert currentFriendsList != null;
-                    currentFriendsList.add(playersUUID);
-                    USERS_REF.child(currentsUserUUID).child("friends").setValue(currentFriendsList);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
 }
