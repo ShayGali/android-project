@@ -40,32 +40,32 @@ public class PlayerProfileActivity extends AppCompatActivity {
 
 
         // Import Intents
-//        currentPlayer = (User) getIntent().getExtras().getSerializable("playersObj"); // an intent Player's Object got from SearchActivity
+        currentPlayer = (User) getIntent().getExtras().getSerializable("playersObj"); // an intent Player's Object got from SearchActivity
         playersUUID = getIntent().getExtras().getString("playersUUID");
         friendsAmountIntent = getIntent().getExtras().getInt("amountOfFriends");
         tags = getIntent().getExtras().getStringArrayList("tagList");
 
         // Initialize adapter
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.my_text_list_view, tags);
-
-        // Initialize Views
+//
+//        // Initialize Views
         userName = findViewById(R.id.selected_user_name);
         country = findViewById(R.id.country);
         tagsTitle = findViewById(R.id.tags_title);
         friendsAmount = findViewById(R.id.friends_amount);
         tagList = findViewById(R.id.tag_list);
         addPlayerBtn = findViewById(R.id.extended_fab);
-
-        // Sets Views with data
+//
+//        // Sets Views with data
         setViews();
-
-        addPlayerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                UserHandler.addPlayerToFriends(playersUUID);
-                addPlayerBtn.hide();
-            }
-        });
+//
+//        addPlayerBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                UserHandler.addPlayerToFriends(playersUUID);
+//                addPlayerBtn.hide();
+//            }
+//        });
 
     }
 

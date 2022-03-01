@@ -78,8 +78,6 @@ public class SearchActivity extends AppCompatActivity {
         // Events listener for pressing on a user's name in the listView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-
-
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
 
@@ -92,11 +90,11 @@ public class SearchActivity extends AppCompatActivity {
                 // Packets up all intents with data
                 for (User user : userMap.values()) {
                     if (user.getUserName().equals(item)) {
-//                        System.out.println("IF 1 - WORKS ");
+////                        System.out.println("IF 1 - WORKS ");
                         intent.putExtra("playersObj",(Serializable) user) ;
                         getUserUUIDByName(item);
                         if (selectedUserUUID != null) {
-//                            System.out.println("IF 2 - WORKS ");
+////                            System.out.println("IF 2 - WORKS ");
                             intent.putExtra("playersUUID",selectedUserUUID);
                             getSelectedPlayersCategories(selectedUserUUID);
                             intent.putExtra("amountOfFriends",selectedPlayersCategories.size());
