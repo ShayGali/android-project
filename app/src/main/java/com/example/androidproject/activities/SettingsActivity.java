@@ -20,4 +20,9 @@ public class SettingsActivity extends AppCompatActivity {
     public void navToUserInfo(View view) {
         startActivity(new Intent(this, UploadUserInfoActivity.class));
     }
+
+    public void navToUserFriendsList(View view) {
+        startActivity(new Intent(this, UploadUserFriendsActivity.class));
+    }
+
 }
