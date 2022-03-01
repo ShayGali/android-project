@@ -48,15 +48,9 @@ public class SearchActivity extends AppCompatActivity {
     public ArrayList<String> playerNames = new ArrayList<>();
     public  ArrayList<String> selectedPlayersCategories = new ArrayList<>();
 
-
-
-    // Selected User's profile pop-up
-    TextView selectedUsersName;
-
     // Testing
     ListView listView;
-    //        ArrayList<User> players;
-    //TODO : check if works with adapter...
+//            ArrayList<User> players;
 
     public static ArrayAdapter<String> arrayAdapter;
 
@@ -72,15 +66,13 @@ public class SearchActivity extends AppCompatActivity {
         if (currentUserData != null)
             currentsUserUUID = currentUserData.getUid();
 
-        UserHandler.getUsers();
-        UserHandler.getPlayerNames();
+        getUsers();
 
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, UserHandler.playerNames);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, playerNames);
 
 //        selectedUsersName = findViewById(R.id.selected_users_name);
         listView = findViewById(R.id.players_listView);
 
-        arrayAdapter.notifyDataSetChanged();
         listView.setAdapter(arrayAdapter);
 
         // Events listener for pressing on a user's name in the listView
@@ -98,22 +90,21 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),PlayerProfileActivity.class);
 
                 // Packets up all intents with data
-                for (User user : UserHandler.userMap.values()) {
+                for (User user : userMap.values()) {
                     if (user.getUserName().equals(item)) {
 //                        System.out.println("IF 1 - WORKS ");
                         intent.putExtra("playersObj",(Serializable) user) ;
-                        UserHandler.getUserUUIDByName(item);
-                        if (UserHandler.selectedUserUUID != null) {
+                        getUserUUIDByName(item);
+                        if (selectedUserUUID != null) {
 //                            System.out.println("IF 2 - WORKS ");
-                            intent.putExtra("playersUUID",UserHandler.selectedUserUUID);
-                            UserHandler.getSelectedPlayersCategories(UserHandler.selectedUserUUID);
-                            intent.putExtra("amountOfFriends",UserHandler.selectedPlayersCategories.size());
-                            intent.putStringArrayListExtra("tagList",UserHandler.selectedPlayersCategories);
+                            intent.putExtra("playersUUID",selectedUserUUID);
+                            getSelectedPlayersCategories(selectedUserUUID);
+                            intent.putExtra("amountOfFriends",selectedPlayersCategories.size());
+                            intent.putStringArrayListExtra("tagList",selectedPlayersCategories);
                         }
                     }
                 }
                 startActivity(intent);
-
             }
         });
 
@@ -157,6 +148,7 @@ public class SearchActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     userMap.put(postSnapshot.getKey(), postSnapshot.getValue(User.class));
                 }
+                getPlayerNames();
             }
 
             @Override
@@ -169,12 +161,12 @@ public class SearchActivity extends AppCompatActivity {
     // Gets from map all user's names and adds them in to an arrayList
     public  void getPlayerNames() {
         playerNames.clear();
-
         for (Map.Entry<String, User> entry : userMap.entrySet()) {
             String key = entry.getKey();
             User user = entry.getValue();
             playerNames.add(user.getUserName());
         }
+        arrayAdapter.notifyDataSetChanged();
     }
 
     // Gets selected players categories by UUID
@@ -196,7 +188,7 @@ public class SearchActivity extends AppCompatActivity {
      */
     public  String selectedUserUUID;
 
-    public static void getUserUUIDByName(String name) {
+    public  void getUserUUIDByName(String name) {
         selectedUserUUID = "";
         for (Map.Entry<String, User> entry : userMap.entrySet()) {
             if (entry.getValue().getUserName().equals(name)) {
@@ -222,7 +214,8 @@ public class SearchActivity extends AppCompatActivity {
      * @PARAM: String playersUUID
      * @RETURN: none
      */
-    public  void addPlayerToFriends(String playersUUID) {
+    ArrayList<String> currentFriendsList;
+    public void addPlayerToFriends(String playersUUID) {
 
         USERS_REF.child(currentsUserUUID).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -240,6 +233,4 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }
