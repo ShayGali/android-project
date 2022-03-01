@@ -18,5 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="navToUserInfo"
-        android:text="update yuor info" />
+        android:text="update your info" />
+
+    <Button
+        android:id="@+id/navToUserFriendsBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="navToUserFriendsList"
+        android:text="update friends list" />
+
 </LinearLayout>

@@ -12,6 +12,9 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.AndroidProject">
         <activity
+            android:name=".activities.UploadUserFriendsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.UploadUserInfoActivity"
             android:exported="false" />
         <activity
