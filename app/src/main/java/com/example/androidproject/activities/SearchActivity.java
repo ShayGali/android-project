@@ -157,7 +157,9 @@ public class SearchActivity extends AppCompatActivity {
         for (Map.Entry<String, User> entry : userMap.entrySet()) {
             String key = entry.getKey();
             User user = entry.getValue();
-            playerNames.add(user.getUserName());
+            if (!currentsUserUUID.equals(key)) {
+                playerNames.add(user.getUserName());
+            }
         }
         arrayAdapter.notifyDataSetChanged();
     }

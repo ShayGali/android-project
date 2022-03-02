@@ -1,5 +1,6 @@
 package com.example.androidproject.utilities;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,11 @@ import java.util.List;
 public class FriendsReqRecyclerViewAdapter extends RecyclerView.Adapter<FriendsReqRecyclerViewAdapter.ReqViewHolder> {
 
     private List<User> usersInFriendsReq;
+    private Activity activity;
 
-
-    public FriendsReqRecyclerViewAdapter(List<User> usersInFriendsReq) {
+    public FriendsReqRecyclerViewAdapter(Activity activity, List<User> usersInFriendsReq) {
         this.usersInFriendsReq = usersInFriendsReq;
+        this.activity = activity;
     }
 
     @NonNull
@@ -38,8 +40,7 @@ public class FriendsReqRecyclerViewAdapter extends RecyclerView.Adapter<FriendsR
         FloatingActionButton reject = holder.rejectFriend;
 
         User currentFriendReq = usersInFriendsReq.get(position);
-        MainActivity mainActivity = new MainActivity();
-
+        MainActivity mainActivity = (MainActivity) activity;
 
         userName.setText(currentFriendReq.getUserName());
 
