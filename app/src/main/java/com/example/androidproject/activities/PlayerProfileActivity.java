@@ -145,6 +145,7 @@ public class PlayerProfileActivity extends AppCompatActivity {
                     currentFriendsList = (ArrayList) snapshot.getValue();
                     currentFriendsList.add(playersUUID);
                     USERS_REF.child(currentsUserUUID).child("friends").setValue(currentFriendsList);
+                    MainActivity.showToastFromThread(PlayerProfileActivity.this, "Players added successfully");
                 } else {
                     MainActivity.showToastFromThread(PlayerProfileActivity.this, "Failed to add player to friends");
                 }
