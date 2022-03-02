@@ -61,7 +61,6 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
         friends = new ArrayList<>();
         friendsNames = new ArrayList<>();
 
-//        getUserFriends();
 
         listView = findViewById(R.id.listView_user_friends);
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friendsNames);
@@ -77,18 +76,9 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
 
     void getUserFriends() {
         userRef.child("friends").addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-//                        if (!Objects.requireNonNull(snapshot.getValue(User.class)).getFriends().isEmpty()) {
-////                            System.out.println(snapshot.getValue(User.class).getFriends());
-//                            friends.addAll(Objects.requireNonNull(snapshot.getValue(User.class)).getFriends());
-//                            for (int i = 0; i < friends.size(); i++) {
-//                                friendsNames.add(getUserObjByUUID(friends.get(i)).getUserName());
-//                            }
-//                            getFriendsNames();
-//                            friends.clear();
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         String friendID = postSnapshot.getValue(String.class);
                         usersRef.child(friendID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -106,10 +96,6 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    for (int i = 0; i < friends.size(); i++) {
-                        friendsNames.add(friends.get(i).getUserName());
-//                        System.out.println(friends.get(i).getUserName());
-                    }
                     getFriendsNames();
                 }
                 loadingAlert.dismissDialog();
@@ -124,11 +110,16 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
     }
 
     void getFriendsNames() {
-        for (String item : friendsNames) {
-            System.out.println(item);
+        if (friends.isEmpty())
+            MainActivity.showToastFromThread(this, friends.toString());
+
+        for (User friend : friends) {
+            if (friend!= null && friend.getUserName() != null)
+                friendsNames.add(friend.getUserName());
+
         }
         arrayAdapter.notifyDataSetChanged();
-        friendsNames.clear();
+//        friendsNames.clear();
     }
 
     public void a(View view) {
