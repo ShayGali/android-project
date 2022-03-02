@@ -34,21 +34,27 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int SIGN_FROM_CREATE = 1;
     public static final String FRIEND_REQUEST_PATH = "friends request";
-    public  FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public static final String USER_FRIENDS_PATH = "friends";
+
+    public FirebaseDatabase database = FirebaseDatabase.getInstance();
     public FirebaseUser currentUser;
 
     LoadingAlert loadingAlert = new LoadingAlert(this);
+    List<User> friendsReqUserData = new LinkedList<>();
+    FriendsReqDialog friendsReqDialog;
 
 
+    public boolean isClickedFriendsRequestBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        friendsReqDialog = new FriendsReqDialog(MainActivity.this, friendsReqUserData);
+
         loadingAlert.startLoadingDialog();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
         if (currentUser == null) {
             Intent singToFirebase = AuthUI.getInstance().createSignInIntentBuilder().build();
             startActivityForResult(singToFirebase, SIGN_FROM_CREATE);
@@ -82,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.open_friend_req_dialog) {
-            getFriendsReq();
-
+            isClickedFriendsRequestBtn = true;
+            getFriendsReq(isClickedFriendsRequestBtn);
         }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
@@ -92,41 +98,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-
-    public void getFriendsReq(){
-        DatabaseReference myRef = database.getReference("users");
-        myRef.child(currentUser.getUid()).child(FRIEND_REQUEST_PATH).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<User> users = new LinkedList<>();
-                FriendsReqDialog friendsReqDialog = new FriendsReqDialog(MainActivity.this,users);
-                if(dataSnapshot.exists()){ // אם אין עליו מידע בדאטה בייס
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                        myRef.child(postSnapshot.getValue(String.class)).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                users.add(snapshot.getValue(User.class));
-                                friendsReqDialog.notifyAdapter();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                }
-                friendsReqDialog.startLoadingDialog();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
-        });
-
-    }
 
     /**
      * @param success - if the login success
@@ -162,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             finish();// סוגר את המסך הנוכחי - מוציא אותו מהאפליקציה
         }
     }
-
 
 
     /**
@@ -204,14 +174,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void checkIfTheUserInfoSaveInTheDataBase(){
+    private void checkIfTheUserInfoSaveInTheDataBase() {
         DatabaseReference myRef = database.getReference("users").child(currentUser.getUid());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                if(!dataSnapshot.exists()){ // אם אין עליו מידע בדאטה בייס
+                if (!dataSnapshot.exists()) { // אם אין עליו מידע בדאטה בייס
                     Intent intent = new Intent(MainActivity.this, UploadUserInfoActivity.class);
                     intent.putExtra("user", currentUser);
                     startActivity(intent);
@@ -230,15 +200,72 @@ public class MainActivity extends AppCompatActivity {
         activity.runOnUiThread(() -> Toast.makeText(activity, displayMsg, Toast.LENGTH_SHORT).show());
     }
 
-    public void acceptFriendReq(String friendID){
+
+    public void getFriendsReq(boolean isClicked) {
+        DatabaseReference ref = database.getReference("users");
+
+        ref.child(currentUser.getUid()).child(FRIEND_REQUEST_PATH).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                friendsReqDialog.dismissDialog();
+
+                if (dataSnapshot.exists()) { // אם יש רשימת חברים
+                    friendsReqUserData.clear();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        String currentIDOfFriendReq = postSnapshot.getValue(String.class);
+                        assert currentIDOfFriendReq != null;
+                        ref.child(currentIDOfFriendReq).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    User currentFriendReq = snapshot.getValue(User.class);
+                                    assert currentFriendReq != null;
+                                    currentFriendReq.setID(currentIDOfFriendReq);
+                                    friendsReqUserData.add(currentFriendReq);
+                                    friendsReqDialog.notifyAdapter();
+                                } else {
+                                    System.out.println("dont");
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                    if (isClickedFriendsRequestBtn) {
+                        friendsReqDialog.startDialog();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
+    }
+
+    public void acceptFriendReq(String friendID) {
+
+        friendsReqDialog.dismissDialog();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
-        myRef.child(FRIEND_REQUEST_PATH).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        myRef.child(currentUser.getUid()).child(FRIEND_REQUEST_PATH).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<String> ids = (List<String>) snapshot.getValue();
-                assert ids != null;
-                ids.remove(friendID);
-                myRef.child(FRIEND_REQUEST_PATH).setValue(ids);
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    String friendReqID = postSnapshot.getValue(String.class);
+                    assert friendReqID != null;
+                    if (friendReqID.equals(friendID))
+                        postSnapshot.getRef().removeValue();
+                }
+
             }
 
             @Override
@@ -246,8 +273,48 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        myRef.child(currentUser.getUid()).child(USER_FRIENDS_PATH).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                LinkedList<String> friendsList = new LinkedList<>();
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    friendsList.add(postSnapshot.getValue(String.class));
+                }
+                friendsList.add(friendID);
+                snapshot.getRef().setValue(friendsList);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        myRef.child(friendID).child(USER_FRIENDS_PATH).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                LinkedList<String> friendsList = new LinkedList<>();
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    friendsList.add(postSnapshot.getValue(String.class));
+                }
+                friendsList.add(currentUser.getUid());
+                snapshot.getRef().setValue(friendsList);
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
-    public void rejectFriendReq(String friendID){
+
+    public void rejectFriendReq(String friendID) {
+        System.out.println("remove");
+
 
     }
 }
