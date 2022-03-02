@@ -94,6 +94,7 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
                                     User currentFriend = snapshot.getValue(User.class);
+                                    currentFriend.setID(snapshot.getKey());
                                     friends.add(currentFriend);
                                     adapter.notifyDataSetChanged();
                                 }

@@ -4,23 +4,25 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable {
     String ID;
     String userName;
     String country;
-    ArrayList<String> categories;
-    ArrayList<String> friends;
-    ArrayList<String> rooms;
+    List<String> categories;
+    List<String> friends;
+    List<String> friendsRequests;
+    List<String> rooms;
 
-    public User(String userName, String country, ArrayList<String> categories, ArrayList<String> friends, ArrayList<String> rooms) {
+    public User(String userName, String country, List<String> categories, List<String> friends, List<String> friendsRequests, List<String> rooms) {
         this.userName = userName;
         this.country = country;
         this.categories = categories;
         this.friends = friends;
+        this.friendsRequests = friendsRequests;
         this.rooms = rooms;
     }
-
 
     public User() {
     }
@@ -41,28 +43,36 @@ public class User implements Serializable {
         this.country = country;
     }
 
-    public ArrayList<String> getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(ArrayList<String> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 
-    public ArrayList<String> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(ArrayList<String> friends) {
+    public void setFriends(List<String> friends) {
         this.friends = friends;
     }
 
-    public ArrayList<String> getRooms() {
-        return rooms;
+    public List<String> getFriendsRequests() {
+        return friendsRequests;
     }
 
-    public void setRooms(ArrayList<String> rooms) {
+    public void setFriendsRequests(List<String> friendsRequests) {
+        this.friendsRequests = friendsRequests;
+    }
+
+    public void setRooms(List<String> rooms) {
         this.rooms = rooms;
+    }
+
+    public List<String> getRooms() {
+        return rooms;
     }
 
     public String getID() {

@@ -49,7 +49,6 @@ public class ChatActivity extends AppCompatActivity {
     private static final String DATABASE_CHAT_NAME_KEY = "chat name";
     private static final String DATABASE_MESSAGES_KEY = "messages";
 
-
     LoadingAlert loadingAlert = new LoadingAlert(this);
 
 
@@ -67,13 +66,14 @@ public class ChatActivity extends AppCompatActivity {
     // the data of the users
     Map<String, User> roomParticipants;
 
-
+    // כל מה שקשור לרשימה שמוצגת
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     ChatRecyclerViewAdapter adapter;
 
-    EditText msgInput;
-    TextView roomNameTextView;
+
+    EditText msgInput; // איפה ששולחים את ההודעה
+    TextView roomNameTextView; // השם של הצאט שמוצג
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -81,52 +81,71 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        // the intent that we gat from the ChatsRoomsActivity
+        // we gat the roomID
         Intent intent = getIntent();
-        String roomId = intent.getExtras().getString("roomID");
+        String roomId = intent.getExtras().getString("roomID"); // TODO: make the "roomID" static variable on ChatsRoomsActivity
 
+        // מאתחלים את על המשתנים שקשורים לפיירבייס
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
         roomRef = database.getReference(DATABASE_ROOMS_KEY).child(roomId);
         usersRef = database.getReference(DATABASE_USERS_KEY);
 
+        // the massage list
         messages = new ArrayList<>();
+        // the ID`s of the room participants
         roomParticipantsID = new ArrayList<>();
+        // the user data of the room participants in map of <String -> userID, User -> dataOnTheUser>
         roomParticipants = new LinkedHashMap<>();
 
+        // get the recyclerView from the layout
         recyclerView = findViewById(R.id.messagesRecyclerView);
 
+        //set the layoutManager
         layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true);
+        layoutManager.setStackFromEnd(true); // start from the bottom
+        // set the layoutManager to the recyclerView
         recyclerView.setLayoutManager(layoutManager);
 
+        // the animation when scrolling
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        // set the adapter with the data
         adapter = new ChatRecyclerViewAdapter(messages, roomParticipants);
 
+        // set the adapter to the recyclerView
         recyclerView.setAdapter(adapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(getDrawable(R.drawable.divider_line));
+        // add divider between the recyclerView items
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(getDrawable(R.drawable.divider_line)); // the drawable file
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        // the message input field
         msgInput = findViewById(R.id.enter_new_message_input);
 
         roomNameTextView = findViewById(R.id.room_name);
 
+        // start the loading dialog
         loadingAlert.startLoadingDialog();
 
+        // get the data that we need from the database
         getMessages();
         getParticipantsIDs();
         getChatName();
     }
 
 
-    void getParticipantsIDs(){
+    /**
+     * get the ID`s of the room paticipants
+     * when we end getting the data we get all of the data of the users
+     */
+    void getParticipantsIDs() {
         roomRef.child(DATABASE_PARTICIPANTS_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     roomParticipantsID.add(postSnapshot.getValue(String.class));
                 }
                 getUsersDataByID();
@@ -139,7 +158,32 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    void getChatName(){
+    /**
+     * get the users data by they ID`s.
+     * put the data in a map <String -> userID, User -> dataOnTheUser>.
+     */
+    public void getUsersDataByID() {
+        for (String userId : roomParticipantsID) {
+            usersRef.child(userId).addValueEventListener(new ValueEventListener() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    roomParticipants.put(userId, snapshot.getValue(User.class));
+                    adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    /**
+     * getting the chat name from the database and display it to the screen
+     */
+    void getChatName() {
         roomRef.child(DATABASE_CHAT_NAME_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -153,8 +197,12 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * at the beginning of the function we receive all messages that have already been sent
+     * after we add listener to get new messages or delete then
+     */
     void getMessages() {
-
+        // get the messages
         roomRef.child(DATABASE_MESSAGES_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -165,7 +213,7 @@ public class ChatActivity extends AppCompatActivity {
                     msg.setID(postSnapshot.getKey());
                     messages.add(msg);
                 }
-                recyclerView.scrollToPosition(messages.size()-1);
+                recyclerView.scrollToPosition(messages.size() - 1);
             }
 
             @Override
@@ -173,7 +221,10 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+        // add listener to the child
         roomRef.child(DATABASE_MESSAGES_KEY).addChildEventListener(new ChildEventListener() {
+
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -181,11 +232,8 @@ public class ChatActivity extends AppCompatActivity {
                 assert msg != null;
                 msg.setID(snapshot.getKey());
                 messages.add(msg);
-                try {
-                    recyclerView.scrollToPosition(messages.size()-1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                recyclerView.scrollToPosition(messages.size() - 1);
+
                 adapter.notifyDataSetChanged();
             }
 
@@ -214,6 +262,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * send new message to the room.
+     * run asynchronously.
+     * clear the message input
+     *
+     * @param view the send button
+     */
     public void send_msg(View view) {
         Thread thread = new Thread(() -> {
             String msgContent = msgInput.getText().toString();
@@ -228,43 +283,34 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    /**
-     *
-     */
-    public void getUsersDataByID() {
-        for (String userId : roomParticipantsID){
-            usersRef.child(userId).addValueEventListener(new ValueEventListener() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    roomParticipants.put(userId, snapshot.getValue(User.class));
-                    adapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-    }
 
     /**
-     * remove all messages from the chat
-     * its over ride all data that in the room by saving only the participant id`s
-     * add then save the the chat name
+     * remove all messages from the chat.
+     * its over ride all data that in the room by saving only the participant id`s.
+     * add then save the the chat name.
      */
     public void clearMessages() {
         roomRef.child(DATABASE_MESSAGES_KEY).removeValue();
     }
 
-
+    /**
+     * gets a reference for a menu and declares the menu logic
+     * onCreate will call it
+     *
+     * @param menu a reference in runtime for the activity's menu bar
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.chat_menu, menu);
         return true;
     }
 
+    /**
+     * what happen when the user press on item in the list
+     *
+     * @param item each item on the menu
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.clear_chet) {
@@ -274,21 +320,7 @@ public class ChatActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
-        if (item.getItemId() == R.id.open_friend_req_dialog) {
-            logout();
-        }
         return true;
     }
 
-
-    private void logout() {
-
-        // TODO: צריך להתבצע בצורה אסינכרונית
-        // TODO: כשהוא מתנתק להעביר אותו לדף חיבור
-        AuthUI.getInstance().signOut(this).addOnCompleteListener(task -> {
-            Toast.makeText(this, "You have logged-out", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        });
-    }
 }

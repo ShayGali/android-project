@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerProfileActivity extends AppCompatActivity {
 
@@ -39,7 +40,7 @@ public class PlayerProfileActivity extends AppCompatActivity {
     User currentPlayer;
     String playersUUID;
     Integer friendsAmountIntent;
-    ArrayList<String> tags;
+    List<String> tags;
 
     // Properties:
     TextView userName;
