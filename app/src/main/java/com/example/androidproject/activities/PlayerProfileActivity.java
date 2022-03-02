@@ -86,6 +86,7 @@ public class PlayerProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 addPlayerToFriends(playersUUID);
                 addPlayerBtn.hide();
+
             }
         });
 
