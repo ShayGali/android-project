@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.UploadUserInfoActivity">
+    tools:context=".activities.UploadUserFriendsActivity">
 
     <!--    <TextView-->
     <!--        android:id="@+id/user_friends_title"-->
@@ -21,7 +21,16 @@
         android:layout_width="match_parent"
         android:layout_height="262dp"
         android:layout_margin="10dp"
-        android:choiceMode="multipleChoice"
+        >
+
+    </ListView>
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:onClick="a"
         />
 
 
