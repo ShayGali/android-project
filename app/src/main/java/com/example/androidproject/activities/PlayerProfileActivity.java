@@ -26,6 +26,7 @@ public class PlayerProfileActivity extends AppCompatActivity {
 
     // Keys
     private final String DATABASE_USERS_KEY = "users";
+    private final String DATABASE_USERS_FRIENDS_REQUEST_LIST = "friends request";
 
     // Database properties:
     public final FirebaseDatabase DATABASE = FirebaseDatabase.getInstance();
@@ -51,11 +52,16 @@ public class PlayerProfileActivity extends AppCompatActivity {
     // Adapter
     public static ArrayAdapter<String> arrayAdapter;
 
+    //FAB props
+    ArrayList<String> playersFriendsRequestList;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_profile_activity);
 
+        playersFriendsRequestList = new ArrayList<>();
 
         // Import Intents
         currentPlayer = (User) getIntent().getExtras().getSerializable("playersObj"); // an intent Player's Object got from SearchActivity
@@ -113,11 +119,13 @@ public class PlayerProfileActivity extends AppCompatActivity {
      * @PARAM: String playersUUID
      * @RETURN: none
      */
-    ArrayList<String> currentFriendsList;
 
     public void addPlayerToFriends(String playersUUID) {
 
+
         USERS_REF.child(currentsUserUUID).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+            boolean sendRequestExists = false;
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -139,15 +147,47 @@ public class PlayerProfileActivity extends AppCompatActivity {
                         }
                     }
 
-                    // adds the Player to currentUser's friends list
-                    if (currentFriendsList != null)
-                        currentFriendsList.clear();
-                    currentFriendsList = (ArrayList) snapshot.getValue();
-                    currentFriendsList.add(playersUUID);
-                    USERS_REF.child(currentsUserUUID).child("friends").setValue(currentFriendsList);
-                    MainActivity.showToastFromThread(PlayerProfileActivity.this, "Players added successfully");
+                    // Sends the Player a Friend Request
+                    USERS_REF.child(playersUUID).child(DATABASE_USERS_FRIENDS_REQUEST_LIST).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                playersFriendsRequestList.clear();
+                                playersFriendsRequestList.addAll((ArrayList<String>) snapshot.getValue());
+                                for (String UUID : playersFriendsRequestList) {
+                                    if (UUID != null)
+                                        if (UUID.equals(currentsUserUUID)) {
+                                            sendRequestExists = true;
+                                        }
+                                }
+
+                                if (!sendRequestExists) {
+                                    System.out.println(playersFriendsRequestList);
+                                    playersFriendsRequestList.add(currentsUserUUID);
+                                    System.out.println(playersFriendsRequestList);
+                                    USERS_REF.child(playersUUID).child(DATABASE_USERS_FRIENDS_REQUEST_LIST).setValue(playersFriendsRequestList);
+                                    MainActivity.showToastFromThread(PlayerProfileActivity.this, "Players Request sent successfully");
+                                }else
+                                    MainActivity.showToastFromThread(PlayerProfileActivity.this, "You already sent a request");
+                            }else{
+                                playersFriendsRequestList.add(currentsUserUUID);
+                                USERS_REF.child(playersUUID).child(DATABASE_USERS_FRIENDS_REQUEST_LIST).setValue(playersFriendsRequestList);                                    MainActivity.showToastFromThread(PlayerProfileActivity.this, "Players Request sent successfully");
+                                MainActivity.showToastFromThread(PlayerProfileActivity.this, "Players Request sent successfully");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+//                    if (currentFriendsList != null)
+//                        currentFriendsList.clear();
+//                    currentFriendsList = (ArrayList) snapshot.getValue();
+//                    currentFriendsList.add(playersUUID);
+//                    USERS_REF.child(currentsUserUUID).child("friends").setValue(currentFriendsList);
                 } else {
-                    MainActivity.showToastFromThread(PlayerProfileActivity.this, "Failed to add player to friends");
+                    MainActivity.showToastFromThread(PlayerProfileActivity.this, "Failed to send the player a friend request");
                 }
             }
 
