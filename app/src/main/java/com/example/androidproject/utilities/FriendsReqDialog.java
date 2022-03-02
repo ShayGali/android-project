@@ -52,10 +52,7 @@ public class FriendsReqDialog {
 
 
     @SuppressLint("NotifyDataSetChanged")
-    public void notifyAdapter(){
+    public void notifyAdapter() {
         adapter.notifyDataSetChanged();
-    }
-    public void dismissDialog() {
-        dialog.dismiss();
     }
 }

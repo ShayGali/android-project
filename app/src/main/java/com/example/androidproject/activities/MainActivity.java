@@ -33,7 +33,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static final int SIGN_FROM_CREATE = 1;
-    public static final String FRIEND_REQUEST_PATH = "friend request";
+    public static final String FRIEND_REQUEST_PATH = "friends request";
     public  FirebaseDatabase database = FirebaseDatabase.getInstance();
     public FirebaseUser currentUser;
 
@@ -116,9 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     }
-
                 }
-
                 friendsReqDialog.startLoadingDialog();
             }
 
@@ -233,7 +231,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void acceptFriendReq(String friendID){
+        DatabaseReference myRef = database.getReference("users");
+        myRef.child(FRIEND_REQUEST_PATH).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> ids = (List<String>) snapshot.getValue();
+                assert ids != null;
+                ids.remove(friendID);
+                myRef.child(FRIEND_REQUEST_PATH).setValue(ids);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     public void rejectFriendReq(String friendID){
 
