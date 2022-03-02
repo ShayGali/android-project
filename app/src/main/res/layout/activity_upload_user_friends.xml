@@ -16,14 +16,10 @@
     <!--        android:text="Friends: "-->
     <!--        android:textSize="16sp" />-->
 
-    <ListView
-        android:id="@+id/listView_user_friends"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_user_friends"
         android:layout_width="match_parent"
-        android:layout_height="262dp"
-        android:layout_margin="10dp"
-        >
-
-    </ListView>
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/button7"

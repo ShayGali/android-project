@@ -2,14 +2,17 @@ package com.example.androidproject.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
+import com.example.androidproject.utilities.FriendsNameRecyclerViewAdapter;
 import com.example.androidproject.utilities.LoadingAlert;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class UploadUserFriendsActivity extends AppCompatActivity {
 
@@ -38,11 +40,13 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     User userModel; // the user model
 
-    ListView listView;
+    RecyclerView recyclerView;
     ArrayList<User> friends;
     ArrayList<String> friendsNames;
 
-    ArrayAdapter<String> arrayAdapter;
+    FriendsNameRecyclerViewAdapter adapter;
+    LinearLayoutManager layoutManager;
+
 
     public Map<String, User> userMap = new HashMap<>();
 
@@ -62,9 +66,12 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
         friendsNames = new ArrayList<>();
 
 
-        listView = findViewById(R.id.listView_user_friends);
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friendsNames);
-        listView.setAdapter(arrayAdapter);
+        recyclerView = findViewById(R.id.recyclerView_user_friends);
+        adapter = new FriendsNameRecyclerViewAdapter(friends);
+        recyclerView.setAdapter(adapter);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
 
         loadingAlert.startLoadingDialog();
@@ -109,6 +116,7 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void getFriendsNames() {
         if (friends.isEmpty())
             MainActivity.showToastFromThread(this, friends.toString());
@@ -118,7 +126,7 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
                 friendsNames.add(friend.getUserName());
 
         }
-        arrayAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 //        friendsNames.clear();
     }
 
