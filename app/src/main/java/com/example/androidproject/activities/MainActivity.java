@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        friendsReqDialog = new FriendsReqDialog(MainActivity.this, friendsReqUserData);
+        friendsReqDialog = new FriendsReqDialog(this, friendsReqUserData);
 
         loadingAlert.startLoadingDialog();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.open_friend_req_dialog) {
             isClickedFriendsRequestBtn = true;
-            getFriendsReq(isClickedFriendsRequestBtn);
+            getFriendsReq();
         }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getFriendsReq(boolean isClicked) {
+    public void getFriendsReq() {
         DatabaseReference ref = database.getReference("users");
 
         ref.child(currentUser.getUid()).child(FRIEND_REQUEST_PATH).addValueEventListener(new ValueEventListener() {

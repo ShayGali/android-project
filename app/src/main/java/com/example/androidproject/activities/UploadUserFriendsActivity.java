@@ -84,6 +84,8 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                friends.clear();
+                adapter.notifyDataSetChanged();
                 if (snapshot.exists()) {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         String friendID = postSnapshot.getValue(String.class);
