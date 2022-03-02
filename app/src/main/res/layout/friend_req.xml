@@ -37,6 +37,7 @@
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:clickable="true"
+            app:backgroundTint="#4CAF50"
             app:srcCompat="@drawable/ic_check" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -46,6 +47,7 @@
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:clickable="true"
+            app:backgroundTint="#FF0000"
             app:srcCompat="@drawable/ic_remove" />
     </LinearLayout>
 

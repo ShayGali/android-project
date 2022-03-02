@@ -42,7 +42,6 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     ArrayList<User> friends;
-    ArrayList<String> friendsNames;
 
     FriendsNameRecyclerViewAdapter adapter;
     LinearLayoutManager layoutManager;
@@ -63,7 +62,6 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
 
 
         friends = new ArrayList<>();
-        friendsNames = new ArrayList<>();
 
 
         recyclerView = findViewById(R.id.recyclerView_user_friends);
@@ -83,6 +81,7 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
 
     void getUserFriends() {
         userRef.child("friends").addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -94,6 +93,7 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
                                 if(snapshot.exists()){
                                     User currentFriend = snapshot.getValue(User.class);
                                     friends.add(currentFriend);
+                                    adapter.notifyDataSetChanged();
                                 }
                             }
 
@@ -103,7 +103,6 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    getFriendsNames();
                 }
                 loadingAlert.dismissDialog();
 
@@ -116,50 +115,10 @@ public class UploadUserFriendsActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    void getFriendsNames() {
-        if (friends.isEmpty())
-            MainActivity.showToastFromThread(this, friends.toString());
 
-        for (User friend : friends) {
-            if (friend!= null && friend.getUserName() != null)
-                friendsNames.add(friend.getUserName());
 
-        }
-        adapter.notifyDataSetChanged();
-//        friendsNames.clear();
-    }
 
-    public void a(View view) {
-        MainActivity.showToastFromThread(this, friends.toString());
-    }
 
-//    public User getUserObjByUUID(String UUID) {
-//        getUsers();
-//        for (Map.Entry<String, User> entry : userMap.entrySet()) {
-//            if (entry.getKey().equals(UUID))
-//                return entry.getValue();
-//        }
-//
-//        return null;
-//    }
-//
-//    public void getUsers() {
-//        USERS_REF.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                userMap.clear();
-//                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-//                    userMap.put(postSnapshot.getKey(), postSnapshot.getValue(User.class));
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
 
 
 }
