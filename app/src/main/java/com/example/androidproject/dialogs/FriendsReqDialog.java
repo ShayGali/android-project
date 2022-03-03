@@ -1,7 +1,6 @@
-package com.example.androidproject.utilities;
+package com.example.androidproject.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.activities.MainActivity;
+import com.example.androidproject.adapters.FriendsReqRecyclerViewAdapter;
 import com.example.androidproject.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class FriendsReqDialog {

@@ -7,13 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
-import com.example.androidproject.utilities.FriendsNameRecyclerViewAdapter;
-import com.example.androidproject.utilities.LoadingAlert;
+import com.example.androidproject.adapters.FriendsNameRecyclerViewAdapter;
+import com.example.androidproject.dialogs.LoadingAlert;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
