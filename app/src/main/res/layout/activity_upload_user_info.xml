@@ -8,42 +8,79 @@
     tools:context=".activities.UploadUserInfoActivity">
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/screen_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="user info" />
+        android:layout_margin="10dp"
+        android:text="User Info"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/user_name_input_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="User name: "
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/username_input_user_info_act"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="userName"
-        />
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <TextView
+        android:id="@+id/user_country_input_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Country: "
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/country_input_user_info_act"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="country"
-        />
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <TextView
+        android:id="@+id/user_categories_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Categories: "
+        android:textSize="16sp" />
 
     <ListView
         android:id="@+id/listView_preferences_categories_on_user_info"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:choiceMode="multipleChoice"
-        />
+        android:layout_height="262dp"
+        android:layout_margin="10dp"
+        android:choiceMode="multipleChoice" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/update_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:minHeight="48dp"
         android:onClick="submitData"
-        android:text="Button" />
+        android:text="Update" />
 
 
 
