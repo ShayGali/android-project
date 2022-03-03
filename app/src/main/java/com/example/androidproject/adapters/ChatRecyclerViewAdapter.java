@@ -1,4 +1,4 @@
-package com.example.androidproject.utilities;
+package com.example.androidproject.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +10,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.activities.ChatActivity;
-import com.example.androidproject.activities.MainActivity;
 import com.example.androidproject.model.Message;
 import com.example.androidproject.model.User;
 import com.google.firebase.auth.FirebaseAuth;

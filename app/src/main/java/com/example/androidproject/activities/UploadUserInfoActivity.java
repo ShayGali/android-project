@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.androidproject.utilities.LoadingAlert;
+import com.example.androidproject.dialogs.LoadingAlert;
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
 import com.google.firebase.auth.FirebaseAuth;

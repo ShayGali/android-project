@@ -9,10 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,14 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.androidproject.model.User;
-import com.example.androidproject.utilities.ChatRecyclerViewAdapter;
-import com.example.androidproject.utilities.LoadingAlert;
+import com.example.androidproject.adapters.ChatRecyclerViewAdapter;
+import com.example.androidproject.dialogs.LoadingAlert;
 import com.example.androidproject.R;
 import com.example.androidproject.model.Message;
-import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;

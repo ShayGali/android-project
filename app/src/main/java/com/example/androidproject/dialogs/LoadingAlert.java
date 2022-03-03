@@ -1,4 +1,4 @@
-package com.example.androidproject.utilities;
+package com.example.androidproject.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;

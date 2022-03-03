@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.example.androidproject.R;
 import com.example.androidproject.model.User;
-import com.example.androidproject.utilities.FriendsReqDialog;
-import com.example.androidproject.utilities.LoadingAlert;
+import com.example.androidproject.dialogs.FriendsReqDialog;
+import com.example.androidproject.dialogs.LoadingAlert;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
