@@ -1,5 +1,6 @@
 package com.example.androidproject.utilities;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class FriendsNameRecyclerViewAdapter extends RecyclerView.Adapter<Friends
         FloatingActionButton deleteFriend = holder.deleteFriend;
 
         String friendName = friendsList.get(position).getUserName();
+        String id = friendsList.get(position).getID();
 
         friendNameTextView.setText(friendName);
 
@@ -54,14 +56,20 @@ public class FriendsNameRecyclerViewAdapter extends RecyclerView.Adapter<Friends
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("users");
 
-                myRef.child(currentUser.getUid()).child("friends").addListenerForSingleValueEvent(new ValueEventListener(){
+                myRef.child(currentUser.getUid()).child("friends").addValueEventListener(new ValueEventListener(){
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()){
-                            String friendId = snapshot.getKey();
-                            snapshot.getRef().removeValue();
+                            for(DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                if (postSnapshot.getValue(String.class).equals(id)) {
+                                    String friendId = postSnapshot.getValue(String.class);
+                                    System.out.println(postSnapshot.getRef());
 
+                                    removeFriend(friendId, currentUser.getUid());
+                                    postSnapshot.getRef().removeValue();
+                                }
+                            }
                         }
 
                     }
@@ -73,8 +81,37 @@ public class FriendsNameRecyclerViewAdapter extends RecyclerView.Adapter<Friends
                 });
 
             }
+
         });
 
+    }
+
+    public void removeFriend(String friendId, String currentUserId){
+        System.out.println("1");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+
+        myRef.child(friendId).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println("2");
+                if (snapshot.exists()) {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        System.out.println("3");
+                        String id = postSnapshot.getValue(String.class);
+                        if (currentUserId.equals(id)) {
+                            postSnapshot.getRef().removeValue();
+                            System.out.println("4");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
