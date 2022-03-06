@@ -1,6 +1,5 @@
 package com.example.androidproject.adapters;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.EventListener;
 import java.util.List;
 
 public class FriendsNameRecyclerViewAdapter extends RecyclerView.Adapter<FriendsNameRecyclerViewAdapter.CardViewHolder>{
@@ -125,7 +123,7 @@ public class FriendsNameRecyclerViewAdapter extends RecyclerView.Adapter<Friends
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
             friendName = itemView.findViewById(R.id.friendName);
-            deleteFriend = itemView.findViewById(R.id.deleteFriendButton);
+            deleteFriend = itemView.findViewById(R.id.delete_friend_btn);
         }
     }
 }
