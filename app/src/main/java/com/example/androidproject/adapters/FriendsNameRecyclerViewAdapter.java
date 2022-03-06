@@ -46,60 +46,51 @@ public class FriendsNameRecyclerViewAdapter extends RecyclerView.Adapter<Friends
 
         friendNameTextView.setText(friendName);
 
-        deleteFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("users");
+        deleteFriend.setOnClickListener(v -> {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("users");
 
-                myRef.child(currentUser.getUid()).child("friends").addValueEventListener(new ValueEventListener(){
+            myRef.child(currentUser.getUid()).child("friends").addValueEventListener(new ValueEventListener(){
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){
-                            for(DataSnapshot postSnapshot : snapshot.getChildren()) {
-                                if (postSnapshot.getValue(String.class).equals(id)) {
-                                    String friendId = postSnapshot.getValue(String.class);
-                                    System.out.println(postSnapshot.getRef());
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()){
+                        for(DataSnapshot postSnapshot : snapshot.getChildren()) {
+                            if (postSnapshot.getValue(String.class).equals(id)) {
+                                String friendId = postSnapshot.getValue(String.class);
+                                System.out.println(postSnapshot.getRef());
 
-                                    removeFriend(friendId, currentUser.getUid());
-                                    postSnapshot.getRef().removeValue();
-                                }
+                                removeFriend(friendId, currentUser.getUid());
+                                postSnapshot.getRef().removeValue();
                             }
                         }
-
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                }
 
-                    }
-                });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
+                }
+            });
 
         });
 
     }
 
     public void removeFriend(String friendId, String currentUserId){
-        System.out.println("1");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
 
         myRef.child(friendId).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println("2");
                 if (snapshot.exists()) {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        System.out.println("3");
                         String id = postSnapshot.getValue(String.class);
                         if (currentUserId.equals(id)) {
-                            postSnapshot.getRef().removeValue();
-                            System.out.println("4");
-                        }
+                            postSnapshot.getRef().removeValue(); }
                     }
                 }
             }

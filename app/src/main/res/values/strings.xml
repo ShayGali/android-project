@@ -18,4 +18,6 @@
     <string name="your_Friends">Your Friends</string>
     <string name="update_your_info">update your info</string>
     <string name="update_friends_list">update friends list</string>
+    <string name="rooms">Rooms</string>
+    <string name="go_to_chat">go to chat</string>
 </resources>
