@@ -8,23 +8,31 @@
     tools:context=".activities.SettingsActivity">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="settings" />
+        android:layout_margin="10dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/settings"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/navToUserInfoBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
         android:onClick="navToUserInfo"
-        android:text="update your info" />
+        android:text="@string/update_your_info" />
 
     <Button
         android:id="@+id/navToUserFriendsBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:onClick="navToUserFriendsList"
-        android:text="update friends list" />
+        android:text="@string/update_friends_list" />
 
 </LinearLayout>

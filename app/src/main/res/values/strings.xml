@@ -15,4 +15,7 @@
     <string name="amount_title">Friends</string>
     <string name="settings">Settings</string>
     <string name="friends_req">friends_req</string>
+    <string name="your_Friends">Your Friends</string>
+    <string name="update_your_info">update your info</string>
+    <string name="update_friends_list">update friends list</string>
 </resources>
