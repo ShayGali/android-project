@@ -17,9 +17,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 public class FriendsReqDialog {
-    MainActivity activity;
-    AlertDialog dialog;
-    List<User> friendReq;
+    MainActivity activity; // we display the dialog only on the MainActivity
+    AlertDialog dialog; // the dialog
+    List<User> friendReq; // the data of the users that send friend request
     RecyclerView recyclerView;
     FriendsReqRecyclerViewAdapter adapter;
 
@@ -47,6 +47,7 @@ public class FriendsReqDialog {
                 activity.isClickedFriendsRequestBtn = false;
             }
         });
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView = dialogView.findViewById(R.id.friends_req_recyclerView);
