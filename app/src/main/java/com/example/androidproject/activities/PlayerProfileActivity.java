@@ -183,7 +183,7 @@ public class PlayerProfileActivity extends AppCompatActivity {
                         }
                     });
 //                    if (currentFriendsList != null)
-//                        currentFriendsList.clear();
+//                        currentFriendsList.clear();d
 //                    currentFriendsList = (ArrayList) snapshot.getValue();
 //                    currentFriendsList.add(playersUUID);
 //                    USERS_REF.child(currentsUserUUID).child("friends").setValue(currentFriendsList);

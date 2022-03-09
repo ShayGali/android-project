@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -206,6 +207,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) { // אם אין עליו מידע בדאטה בייס
+                    /////////////////////////////////////////
+
+                    // יצירת רשימת חברים חדשה
+                    myRef.child(currentUser.getUid()).child("friends").setValue(new ArrayList<String>());
+
+                    // יצירת רשימת בקשות חברות חדשה
+                    myRef.child(currentUser.getUid()).child("friends request").setValue(new ArrayList<String>());
+
+                    /////////////////////////////////////////
                     Intent intent = new Intent(MainActivity.this, UploadUserInfoActivity.class);
                     intent.putExtra("user", currentUser);
                     startActivity(intent);

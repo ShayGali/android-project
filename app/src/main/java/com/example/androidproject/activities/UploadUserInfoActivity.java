@@ -59,6 +59,7 @@ public class UploadUserInfoActivity extends AppCompatActivity {
         // כדי לאתחל את ה user על ההתחלה- אם לא הוא יהיה ב null בלחיצה הראשונה
         // displayUserInfoToTheInputFields והוא גם ייקרא ל
 
+
         //start loading alert
         // will dismiss when the thread end
         loadingAlert.startLoadingDialog();
