@@ -8,15 +8,18 @@
     tools:context=".activities.ChatsRoomsActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/chats_rooms_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="rooms" />
+        android:text="@string/rooms"
+        android:layout_margin="10dp"
+        android:textSize="30sp"/>
 
     <Button
         android:id="@+id/goToChatBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="goToChat"
-        android:text="go to chat" />
+        android:layout_margin="10dp"
+        android:text="@string/go_to_chat" />
 </LinearLayout>

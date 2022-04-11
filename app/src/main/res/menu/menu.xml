@@ -8,6 +8,12 @@
         app:showAsAction="never"
         />
     <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_close"
+        android:title="@string/log_out"
+        app:showAsAction="never"
+        />
+    <item
         android:id="@+id/open_friend_req_dialog"
         android:icon="@drawable/ic_notification"
         android:title="@string/friends_req"
